@@ -1,0 +1,186 @@
+/***
+ *
+ * This Is A Java CUP Specification For CSX-lite, a Small Subset
+ * of The CSX Language,  Prepared by Charles Fischer.
+ *
+ ***/
+
+/* Preliminaries to set up and use the scanner.  */
+
+import java_cup.runtime.*;
+parser code {:
+ public void syntax_error(Symbol cur_token)
+     {
+ 	  report_error("CSX syntax error at line "+
+			String.valueOf(((CSXToken)cur_token.value).linenum),
+			null);
+     }
+:};
+init with {:              :};
+scan with {: return Scanner.next_token(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal CSXToken     		STRLIT, rw_FLOAT, rw_WHILE, rw_BOOL, LBRACKET, rw_IF, rw_CONTINUE, 
+							rw_FALSE, LPAREN, SEMI, rw_PRINT, rw_TRUE, RPAREN, NOT, INTLIT, 
+							rw_VOID, LT, rw_CONST, COMMA, INC, rw_ELSE, GEQ, rw_READ, rw_INT, 
+							RBRACKET, COR, rw_CLASS, rw_RETURN, EQ, FLOATLIT, ASG,
+							CHARLIT, COLON, LBRACE, rw_CHAR, RBRACE, CAND, LEQ, rw_BREAK, DEC, GT, 
+							NOTEQ, IDENTIFIER;
+							
+terminal CSXToken     		SLASH, TIMES;
+
+terminal CSXToken     		PLUS, MINUS;
+
+/* Non terminals */
+non terminal csxLiteNode     	prog;
+non terminal nullNode     		memberdecls;
+non terminal nullNode	     	fielddecls;
+non terminal nullNode			methoddecls;
+non terminal nullNode	     	optionalsemi;
+non terminal nullNode	     	methoddecl;
+non terminal nullNode	     	argdecls;
+non terminal nullNode	     	argdecl;
+non terminal nullNode	     	fielddecl;
+non terminal nullNode	     	stmts;
+non terminal nullNode	     	stmt;
+non terminal nullNode	     	stmtwithelse;
+non terminal nullNode	     	type;
+non terminal nullNode	     	args;
+non terminal nullNode	     	readlist;
+non terminal nullNode	     	printlist;
+non terminal nullNode	     	expr;
+non terminal nullNode	     	term;
+non terminal nullNode	     	factor;
+non terminal nullNode	     	pri;
+non terminal nullNode	     	unary;
+non terminal nullNode	     	unit;
+non terminal nullNode	     	name;
+
+start with prog;
+
+prog			::= rw_CLASS IDENTIFIER LBRACE memberdecls RBRACE
+			;
+		
+memberdecls		::= fielddecl memberdecls
+				| methoddecls
+			;
+		
+fielddecls		::= fielddecl fielddecls
+				| /* NULL */
+			;
+			
+methoddecls		::= methoddecl methoddecls
+				| /* NULL */
+			;
+
+optionalsemi	::= SEMI
+				| /* NULL */
+			;
+				
+methoddecl		::= rw_VOID IDENTIFIER LPAREN RPAREN LBRACE fielddecls stmts RBRACE optionalsemi
+				| rw_VOID IDENTIFIER LPAREN argdecls RPAREN LBRACE fielddecls stmts RBRACE optionalsemi
+				| type IDENTIFIER LPAREN RPAREN LBRACE fielddecls stmts RBRACE optionalsemi
+				| type IDENTIFIER LPAREN argdecls RPAREN LBRACE fielddecls stmts RBRACE optionalsemi
+				| argdecl COMMA argdecls
+				| argdecl
+			;
+			
+argdecls		::= argdecl COMMA argdecls
+				| argdecl
+			;
+
+argdecl			::= type IDENTIFIER
+				| type IDENTIFIER LBRACKET RBRACKET
+			;
+
+fielddecl		::= type IDENTIFIER SEMI
+				| type IDENTIFIER ASG expr SEMI
+				| type IDENTIFIER LBRACKET INTLIT RBRACKET SEMI
+				| rw_CONST IDENTIFIER ASG expr SEMI
+			;
+			
+stmts			::= stmt stmts
+				| stmt
+			;
+			
+stmt			::= rw_IF LPAREN expr RPAREN stmt
+				| rw_IF LPAREN expr RPAREN stmtwithelse rw_ELSE stmt
+				| rw_WHILE LPAREN expr RPAREN stmt
+				| IDENTIFIER COLON rw_WHILE LPAREN expr RPAREN stmt
+				| name ASG expr SEMI
+				| rw_READ LPAREN readlist RPAREN SEMI
+				| rw_PRINT LPAREN printlist RPAREN SEMI
+				| IDENTIFIER LPAREN RPAREN SEMI
+				| IDENTIFIER LPAREN args RPAREN SEMI
+				| rw_RETURN SEMI
+				| rw_RETURN expr SEMI
+				| rw_BREAK IDENTIFIER SEMI
+				| rw_CONTINUE IDENTIFIER SEMI
+				| LBRACE fielddecls stmts RBRACE optionalsemi
+			;
+
+stmtwithelse	::= rw_IF LPAREN expr RPAREN stmtwithelse rw_ELSE stmtwithelse
+			;
+			
+type			::= rw_INT
+				| rw_CHAR
+				| rw_BOOL
+			;
+			
+args			::= expr COMMA args
+				| expr
+			;
+				
+readlist		::= name COMMA readlist
+				| name
+			;
+			
+printlist		::= expr COMMA printlist
+				| expr
+			;
+			
+expr			::= expr COR term
+				| expr CAND term
+				| term
+			;
+			
+term			::= factor LT factor
+				| factor GT factor
+				| factor LEQ factor
+				| factor GEQ factor
+				| factor EQ factor
+				| factor NOTEQ factor
+				| factor
+			;
+			
+factor			::= factor PLUS pri
+				| factor MINUS pri
+				| pri
+				
+			;
+
+pri				::= pri TIMES unary
+				| pri SLASH unary
+				| unary
+			;
+			
+unary			::= NOT unary
+				| LPAREN type RPAREN unary
+				| unit
+			;
+			
+unit			::= name
+				| IDENTIFIER LPAREN RPAREN
+				| IDENTIFIER LPAREN args RPAREN
+				| INTLIT
+				| CHARLIT
+				| FLOATLIT
+				| STRLIT
+				| rw_TRUE
+				| rw_FALSE
+				| LPAREN expr RPAREN
+			;
+			
+name			::= IDENTIFIER
+				| IDENTIFIER LBRACKET expr RBRACKET
+			;
