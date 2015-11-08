@@ -25,11 +25,7 @@ terminal CSXToken     		STRLIT, rw_FLOAT, rw_WHILE, rw_BOOL, LBRACKET, rw_IF, rw
 							rw_VOID, LT, rw_CONST, COMMA, INC, rw_ELSE, GEQ, rw_READ, rw_INT, 
 							RBRACKET, COR, rw_CLASS, rw_RETURN, EQ, FLOATLIT, ASG,
 							CHARLIT, COLON, LBRACE, rw_CHAR, RBRACE, CAND, LEQ, rw_BREAK, DEC, GT, 
-							NOTEQ, IDENTIFIER;
-							
-terminal CSXToken     		SLASH, TIMES;
-
-terminal CSXToken     		PLUS, MINUS;
+							NOTEQ, IDENTIFIER, SLASH, TIMES, PLUS, MINUS;
 
 /* Non terminals */
 non terminal csxLiteNode     	prog;

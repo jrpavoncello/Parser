@@ -3,7 +3,7 @@ class test {
 //may not type-check or execute correctly 
 
    int i = 0;
-   f(int i) {
+   void f(int i) {
        i=i+1;
    };
 }

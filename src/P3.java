@@ -20,8 +20,8 @@ class P3 {
 		final parser csxParser = new parser();
 		Symbol root = null;
 		try {
-			// root = csxParser.debug_parse(); // do the parse
-			root = csxParser.parse(); // do the parse
+			root = csxParser.debug_parse(); // do the parse
+			//root = csxParser.parse(); // do the parse
 			System.out.println ("CSX program parsed correctly.");
 		} catch (Exception e){
 			System.out.println ("Compilation terminated due to syntax errors.");
