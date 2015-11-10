@@ -25,7 +25,7 @@ terminal CSXToken     		STRLIT, rw_FLOAT, rw_WHILE, rw_BOOL, LBRACKET, rw_IF, rw
 							rw_VOID, LT, rw_CONST, COMMA, INC, rw_ELSE, GEQ, rw_READ, rw_INT, 
 							RBRACKET, COR, rw_CLASS, rw_RETURN, EQ, FLOATLIT, ASG,
 							CHARLIT, COLON, LBRACE, rw_CHAR, RBRACE, CAND, LEQ, rw_BREAK, DEC, GT, 
-							NOTEQ, IDENTIFIER, SLASH, TIMES, PLUS, MINUS;
+							NOTEQ, IDENTIFIER, SLASH, TIMES, PLUS, MINUS, rw_ENDIF;
 
 /* Non terminals */
 non terminal csxLiteNode     	prog;
@@ -38,6 +38,7 @@ non terminal nullNode	     	argdecls;
 non terminal nullNode	     	argdecl;
 non terminal nullNode	     	fielddecl;
 non terminal nullNode	     	stmts;
+non terminal nullNode	     	sstmt;
 non terminal nullNode	     	stmt;
 non terminal nullNode	     	stmtwithelse;
 non terminal nullNode	     	type;
@@ -99,8 +100,8 @@ stmts			::= stmt stmts
 				| stmt
 			;
 			
-stmt			::= rw_IF LPAREN expr RPAREN stmt
-				| rw_IF LPAREN expr RPAREN stmtwithelse rw_ELSE stmt
+stmt			::= rw_IF LPAREN expr RPAREN stmt rw_ENDIF
+				| rw_IF LPAREN expr RPAREN stmt rw_ELSE stmt rw_ENDIF
 				| rw_WHILE LPAREN expr RPAREN stmt
 				| IDENTIFIER COLON rw_WHILE LPAREN expr RPAREN stmt
 				| name ASG expr SEMI
@@ -112,10 +113,11 @@ stmt			::= rw_IF LPAREN expr RPAREN stmt
 				| rw_RETURN expr SEMI
 				| rw_BREAK IDENTIFIER SEMI
 				| rw_CONTINUE IDENTIFIER SEMI
+				| IDENTIFIER INC SEMI
+				| INC IDENTIFIER SEMI
+				| IDENTIFIER DEC SEMI
+				| DEC IDENTIFIER SEMI
 				| LBRACE fielddecls stmts RBRACE optionalsemi
-			;
-
-stmtwithelse	::= rw_IF LPAREN expr RPAREN stmtwithelse rw_ELSE stmtwithelse
 			;
 			
 type			::= rw_INT

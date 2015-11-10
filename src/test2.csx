@@ -55,6 +55,7 @@ void main() {
      if (x)
           if (y)
               i=6;endif
+			  endif
      {
           i=7;}
      if (!z)
@@ -75,5 +76,5 @@ void main() {
                     i++;
 			endif
         else
-           i=8;endif endif
+           i=8;endif
 } }

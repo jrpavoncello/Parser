@@ -120,7 +120,7 @@ class Position
 %%
 
 BLOCKCOMMENT = ##((#[^#])|[^#])*#?##
-SINGLELINECOMMENT = [/][/].*[\n\r]?
+SINGLELINECOMMENT = [/][/].*([\n\r]|[\n])?
 
 DIGIT=[0-9]
 STRLIT = \"((\\[\\\"rnt])|[\040!#-\[\]-~])*\"
@@ -139,6 +139,7 @@ TRUE = [tT][rR][uU][eE]
 VOID = [vV][oO][iI][dD]
 PRINT = [pP][rR][iI][nN][tT]
 IF = [iI][fF]
+ENDIF = [eE][nN][dD][iI][fF]
 
 BREAK = [Bb][Rr][Ee][Aa][Kk]
 CHAR = [Cc][Hh][Aa][Rr]
@@ -153,7 +154,7 @@ READ = [Rr][Ee][Aa][Dd]
 ELSE = [Ee][Ll][Ss][Ee]
 CONST = [Cc][Oo][Nn][Ss][Tt]
 
-RESERVED_WORD = {FLOAT}|{WHILE}|{BOOL}|{CONTINUE}|{FALSE}|{TRUE}|{VOID}|{PRINT}|{BREAK}|{CHAR}|{CLASS}|{RETURN}|{INT}|{READ}|{ELSE}|{CONST}|{IF}
+RESERVED_WORD = {FLOAT}|{WHILE}|{BOOL}|{CONTINUE}|{FALSE}|{TRUE}|{VOID}|{PRINT}|{BREAK}|{CHAR}|{CLASS}|{RETURN}|{INT}|{READ}|{ELSE}|{CONST}|{IF}|{ENDIF}
 
 %states FoundIdentifier
 %xstates FoundIdentifierMatch
@@ -826,6 +827,16 @@ Tokens for the CSX language are defined here using regular expressions
 	Pos.setpos();
 	Pos.col += yytext().length();
 	return new Symbol(sym.rw_IF,
+			new CSXToken(Pos));
+}
+
+{ENDIF}
+{
+	//Reserved word ENDIF, case insensitive
+	yybegin(YYINITIAL);
+	Pos.setpos();
+	Pos.col += yytext().length();
+	return new Symbol(sym.rw_ENDIF,
 			new CSXToken(Pos));
 }
 
