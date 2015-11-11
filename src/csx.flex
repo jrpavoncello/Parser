@@ -140,6 +140,7 @@ VOID = [vV][oO][iI][dD]
 PRINT = [pP][rR][iI][nN][tT]
 IF = [iI][fF]
 ENDIF = [eE][nN][dD][iI][fF]
+FOR =  [Ff][Oo][Rr]
 
 BREAK = [Bb][Rr][Ee][Aa][Kk]
 CHAR = [Cc][Hh][Aa][Rr]
@@ -154,7 +155,7 @@ READ = [Rr][Ee][Aa][Dd]
 ELSE = [Ee][Ll][Ss][Ee]
 CONST = [Cc][Oo][Nn][Ss][Tt]
 
-RESERVED_WORD = {FLOAT}|{WHILE}|{BOOL}|{CONTINUE}|{FALSE}|{TRUE}|{VOID}|{PRINT}|{BREAK}|{CHAR}|{CLASS}|{RETURN}|{INT}|{READ}|{ELSE}|{CONST}|{IF}|{ENDIF}
+RESERVED_WORD = {FLOAT}|{WHILE}|{BOOL}|{CONTINUE}|{FALSE}|{TRUE}|{VOID}|{PRINT}|{BREAK}|{CHAR}|{CLASS}|{RETURN}|{INT}|{READ}|{ELSE}|{CONST}|{IF}|{ENDIF}|{FOR}
 
 %states FoundIdentifier
 %xstates FoundIdentifierMatch
@@ -837,6 +838,16 @@ Tokens for the CSX language are defined here using regular expressions
 	Pos.setpos();
 	Pos.col += yytext().length();
 	return new Symbol(sym.rw_ENDIF,
+			new CSXToken(Pos));
+}
+
+{FOR}
+{
+	//Reserved word FOR, case insensitive
+	yybegin(YYINITIAL);
+	Pos.setpos();
+	Pos.col += yytext().length();
+	return new Symbol(sym.rw_FOR,
 			new CSXToken(Pos));
 }
 
