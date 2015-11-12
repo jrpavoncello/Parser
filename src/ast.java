@@ -390,6 +390,16 @@ class whileNode extends stmtNode {
 	private final stmtNode loopBody;
 } // class whileNode 
 
+class forNode extends stmtNode {
+	
+	forNode( int line, int col){
+		super(line,col);
+		
+	}
+	
+}
+
+
 class readNode extends stmtNode {
 	readNode() {}
 	readNode(nameNode n, readNode rn, int line, int col) {

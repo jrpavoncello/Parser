@@ -52,6 +52,7 @@ non terminal nullNode	     	pri;
 non terminal nullNode	     	unary;
 non terminal nullNode	     	unit;
 non terminal nullNode	     	name;
+non terminal nullNode	     	update;
 
 start with prog;
 
@@ -104,30 +105,31 @@ stmt			::= rw_IF LPAREN expr RPAREN stmt rw_ENDIF
 				| rw_IF LPAREN expr RPAREN stmt rw_ELSE stmt rw_ENDIF
 				| rw_WHILE LPAREN expr RPAREN stmt
 				| IDENTIFIER COLON rw_WHILE LPAREN expr RPAREN stmt
-				| name ASG expr SEMI
 				| rw_READ LPAREN readlist RPAREN SEMI
 				| rw_PRINT LPAREN printlist RPAREN SEMI
 				| IDENTIFIER LPAREN RPAREN SEMI
 				| IDENTIFIER LPAREN args RPAREN SEMI
+				| update SEMI
 				| rw_RETURN SEMI
 				| rw_RETURN expr SEMI
 				| rw_BREAK IDENTIFIER SEMI
 				| rw_CONTINUE IDENTIFIER SEMI
-				| IDENTIFIER INC SEMI
-				| INC IDENTIFIER SEMI
-				| IDENTIFIER DEC SEMI
-				| DEC IDENTIFIER SEMI
 				| LBRACE fielddecls stmts RBRACE optionalsemi
-				| rw_FOR LPAREN name ASG expr SEMI expr SEMI name INC RPAREN stmt
-				| rw_FOR LPAREN name ASG expr SEMI expr SEMI name DEC RPAREN stmt
-				| rw_FOR LPAREN name ASG expr SEMI expr SEMI INC name RPAREN stmt
-				| rw_FOR LPAREN name ASG expr SEMI expr SEMI DEC name RPAREN stmt
-				| rw_FOR LPAREN name ASG expr SEMI expr SEMI expr RPAREN stmt
+				| rw_FOR LPAREN name ASG expr SEMI expr SEMI update RPAREN stmt
 			;
 			
+			
+update		::= IDENTIFIER INC 
+				| INC IDENTIFIER 
+				| IDENTIFIER DEC 
+				| DEC IDENTIFIER 
+				| name ASG expr
+		;
+		
 type			::= rw_INT
 				| rw_CHAR
 				| rw_BOOL
+				| rw_FLOAT
 			;
 			
 args			::= expr COMMA args
