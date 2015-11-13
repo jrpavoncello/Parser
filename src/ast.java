@@ -392,10 +392,20 @@ class whileNode extends stmtNode {
 
 class forNode extends stmtNode {
 	
-	forNode( int line, int col){
-		super(line,col);
-		
+	forNode(exprNode i,exprNode inita, exprNode e, exprNode u, stmtNode s, int line, int col) {
+		super(line, col);
+	 label = i;
+	 Initialization = inita;
+	 condition = e;
+	 update = u;
+	 loopBody = s;
 	}
+
+	private final exprNode label;
+	private final exprNode Initialization;
+	private final exprNode condition;
+	private final exprNode update;
+	private final stmtNode loopBody;
 	
 }
 

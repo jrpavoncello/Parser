@@ -176,16 +176,45 @@ unary			::= NOT unary
 			
 unit			::= name
 				| IDENTIFIER LPAREN RPAREN
-				| IDENTIFIER LPAREN args RPAREN
-				| INTLIT
-				| CHARLIT
-				| FLOATLIT
-				| STRLIT
-				| rw_TRUE
-				| rw_FALSE
+				| IDENTIFIER:id LPAREN args:ar RPAREN
+				| INTLIT:il
+				{: RESULT = new strLitNode(il.intValue,
+				il.linenum, il.colnum);
+				:}
+				| CHARLIT:cl
+				{: RESULT = new floatLitNode(cl.charValue,
+				cl.linenum, cl.colnum);
+				:}
+				| FLOATLIT:fl
+				{: RESULT = new floatLitNode(fl.floatValue,
+				fl.linenum, fl.colnum);
+				:}
+				| STRLIT:sl
+				{: RESULT = new strLitNode(sl.stringValue,
+				sl.linenum, sl.colnum);
+				:}
+				| rw_TRUE:t
+				{: RESULT = new trueNode(
+				t.linenum, t.colnum);
+				:}
+				| rw_FALSE:f
+				{: RESULT = new falseNode(
+				f.linenum, f.colnum);
+				:}
 				| LPAREN expr RPAREN
+				
 			;
 			
-name			::= IDENTIFIER
-				| IDENTIFIER LBRACKET expr RBRACKET
+name			::= IDENTIFIER:i
+ 					{: RESULT = new nameNode(
+					  new identNode(i.identifierText,
+						 i.linenum,i.colnum),
+					  exprNode.NULL,
+					  i.linenum,i.colnum); :}	
+				| IDENTIFIER:i LBRACKET expr:e RBRACKET
+				 {: RESULT = new nameNode(
+					  new identNode(i.identifierText,
+						 i.linenum,i.colnum),
+					  e,
+					  i.linenum,i.colnum); :}	
 			;
