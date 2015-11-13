@@ -224,8 +224,7 @@ ident			::= IDENTIFIER:i
 					 identToken.linenum,identToken.colnum); :}
 			;
 			
-name			::= 
-				| ident:i
+name			::= ident:i
 				{: new nameNode(i, exprNode.NULL, i.linenum,i.colnum); :}
 				| ident:i LBRACKET expr:e RBRACKET
 				{: RESULT = new nameNode(i, e, i.linenum,i.colnum); :}	
