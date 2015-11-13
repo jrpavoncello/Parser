@@ -56,11 +56,24 @@ non terminal nullNode	     	update;
 
 start with prog;
 
-prog			::= rw_CLASS IDENTIFIER LBRACE memberdecls RBRACE
+prog			::= rw_CLASS:c IDENTIFIER:id LBRACE memberdecls:m RBRACE
+				{:
+					RESULT = new classNode(id, m, c.linenum, c.colnum);
+				:}
 			;
 		
-memberdecls		::= fielddecl memberdecls
-				| methoddecls
+memberdecls		::= fielddecl:f memberdecls:memDecls
+				{:
+					fieldDeclsNode newFields = 
+					new fieldDeclsNode(f, memDecls.fields, f.linenum, f.colnum);
+					RESULT = new memberDeclsNode(newFields, memDecls.methods);
+				:}
+				
+				| methoddecls:methDecls
+				{:
+					RESULT = new memberDeclsNode(fieldDeclsNode.NULL,
+					methDecls, methDecls.linenum, methDecls.colnum);
+				:}
 			;
 		
 fielddecls		::= fielddecl fielddecls
@@ -124,7 +137,7 @@ update		::= IDENTIFIER INC
 				| IDENTIFIER DEC 
 				| DEC IDENTIFIER 
 				| name ASG expr
-		;
+			;
 		
 type			::= rw_INT
 				| rw_CHAR
@@ -161,7 +174,6 @@ term			::= factor LT factor
 factor			::= factor PLUS pri
 				| factor MINUS pri
 				| pri
-				
 			;
 
 pri				::= pri TIMES unary
