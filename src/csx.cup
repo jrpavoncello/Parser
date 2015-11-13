@@ -28,7 +28,7 @@ terminal CSXToken     		STRLIT, rw_FLOAT, rw_WHILE, rw_BOOL, LBRACKET, rw_IF, rw
 							NOTEQ, IDENTIFIER, SLASH, TIMES, PLUS, MINUS, rw_ENDIF, rw_FOR;
 
 /* Non terminals */
-non terminal csxLiteNode     	prog;
+non terminal classNode  	   	prog;
 non terminal memberDeclsNode	memberdecls;
 non terminal fieldDeclsNode    	fielddecls;
 non terminal methodDeclsNode	methoddecls;
@@ -191,11 +191,11 @@ unit			::= name
 				| IDENTIFIER LPAREN RPAREN
 				| IDENTIFIER:id LPAREN args:ar RPAREN
 				| INTLIT:il
-				{: RESULT = new strLitNode(il.intValue,
+				{: RESULT = new intLitNode(il.intValue,
 				il.linenum, il.colnum);
 				:}
 				| CHARLIT:cl
-				{: RESULT = new floatLitNode(cl.charValue,
+				{: RESULT = new charLitNode(cl.charValue,
 				cl.linenum, cl.colnum);
 				:}
 				| FLOATLIT:fl
