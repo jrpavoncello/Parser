@@ -188,7 +188,9 @@ unary			::= NOT unary
 			
 unit			::= name
 				| ident LPAREN RPAREN
+				/* fctCallNode */
 				| ident:id LPAREN args:ar RPAREN
+				/* fctCallNode */
 				| INTLIT:il
 				{: RESULT = new strLitNode(il.intValue,
 				il.linenum, il.colnum);
