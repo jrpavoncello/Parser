@@ -66,7 +66,8 @@ memberdecls		::= fielddecl:f memberdecls:memDecls
 				{:
 					fieldDeclsNode newFields = 
 					new fieldDeclsNode(f, memDecls.fields, f.linenum, f.colnum);
-					RESULT = new memberDeclsNode(newFields, memDecls.methods);
+					RESULT = new memberDeclsNode(newFields, memDecls.methods, 
+					memDecls.linenum, memDecls.colnum);
 				:}
 				
 				| methoddecls:methDecls
