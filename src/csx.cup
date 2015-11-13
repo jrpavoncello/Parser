@@ -29,14 +29,14 @@ terminal CSXToken     		STRLIT, rw_FLOAT, rw_WHILE, rw_BOOL, LBRACKET, rw_IF, rw
 
 /* Non terminals */
 non terminal csxLiteNode     	prog;
-non terminal nullNode     		memberdecls;
-non terminal nullNode	     	fielddecls;
-non terminal nullNode			methoddecls;
+non terminal memberDeclsNode	memberdecls;
+non terminal fieldDeclsNode    	fielddecls;
+non terminal methodDeclsNode	methoddecls;
 non terminal nullNode	     	optionalsemi;
 non terminal nullNode	     	methoddecl;
 non terminal nullNode	     	argdecls;
 non terminal nullNode	     	argdecl;
-non terminal nullNode	     	fielddecl;
+non terminal declNode	 		fielddecl;
 non terminal nullNode	     	stmts;
 non terminal nullNode	     	sstmt;
 non terminal nullNode	     	stmt;
