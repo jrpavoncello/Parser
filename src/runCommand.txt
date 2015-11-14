@@ -1,1 +1,1 @@
-javda -cp ../lib/java-cup-10l.jar;. P3 "F:\dev\Java\Parser\src\test1.csx"
+java -cp ../lib/java-cup-10l.jar;. P3 "F:\dev\Java\Parser\src\test1.csx"
