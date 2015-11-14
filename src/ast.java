@@ -129,7 +129,7 @@ class varDeclNode extends declNode {
 } // class varDeclNode
 
 class constDeclNode extends declNode {
-	constDeclNode(identNode id,  exprNode e, int line, int col) {
+	constDeclNode(identNode id, exprNode e, int line, int col) {
 		super(line, col);
 		constName = id;
 		constValue = e;
@@ -392,21 +392,20 @@ class whileNode extends stmtNode {
 
 class forNode extends stmtNode {
 	
-	forNode(exprNode i,exprNode inita, exprNode e, exprNode u, stmtNode s, int line, int col) {
+	forNode(identNode id, exprNode inita, exprNode e, stmtNode u, stmtNode s, int line, int col) {
 		super(line, col);
-	 label = i;
-	 Initialization = inita;
-	 condition = e;
-	 update = u;
-	 loopBody = s;
+		loopVar = id;
+		Initialization = inita;
+		condition = e;
+		update = u;
+		loopBody = s;
 	}
 
-	private final exprNode label;
+	private final identNode loopVar;
 	private final exprNode Initialization;
 	private final exprNode condition;
-	private final exprNode update;
+	private final stmtNode update;
 	private final stmtNode loopBody;
-	
 }
 
 
@@ -679,3 +678,27 @@ class falseNode extends exprNode {
 		super(line, col);
 	}
 } // class falseNode 
+
+class preIncrStmtNode extends stmtNode {
+	preIncrStmtNode(int line, int col) {
+		super(line, col);
+	}
+} // class preIncrStmtNode 
+
+class postIncrStmtNode extends stmtNode {
+	postIncrStmtNode(int line, int col) {
+		super(line, col);
+	}
+} // class postIncrStmtNode 
+
+class preDecStmtNode extends stmtNode {
+	preDecStmtNode(int line, int col) {
+		super(line, col);
+	}
+} // class preDecStmtNode 
+
+class postDecStmtNode extends stmtNode {
+	postDecStmtNode(int line, int col) {
+		super(line, col);
+	}
+} // class postDecStmtNode 
