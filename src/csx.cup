@@ -44,12 +44,12 @@ non terminal argsNode	     	args;
 non terminal readNode	     	readlist;
 non terminal printNode	     	printlist;
 non terminal exprNode	     	expr;
-non terminal nullNode	     	term;
-non terminal nullNode	     	factor;
-non terminal nullNode	     	pri;
-non terminal nullNode	     	unary;
-non terminal nullNode	     	unit;
-non terminal nullNode	     	name;
+non terminal binaryOpNode     	term;
+non terminal binaryOpNode     	factor;
+non terminal binaryOpNode     	pri;
+non terminal exprNode	     	unary;
+non terminal exprNode	     	unit;
+non terminal nameNode	     	name;
 non terminal stmtNode	     	update;
 non terminal identNode			ident;
 non terminal voidTypeNode		void;
@@ -231,57 +231,109 @@ stmt			::= rw_IF:i LPAREN expr:e RPAREN stmt:s rw_ENDIF
 			;
 			
 			
-update		::= ident INC 
-				| INC ident 
-				| ident DEC 
-				| DEC ident 
-				| name ASG expr
+update		::= ident:id INC:inc 
+				{: RESULT = new asgNode(id, inc, id.linenum, id.colnum);
+				:}
+				| INC:inc ident:id 
+				{: RESULT = new asgNode(id, inc, inc.linenum, inc.colnum);
+				:}
+				| ident:id DEC:dec 
+				{: RESULT = new asgNode(id, dec, id.linenum, id.colnum);
+				:}
+				| DEC:dec ident:id 
+				{: RESULT = new asgNode(id , dec, dec.linenum, dec.colnum);
+				:}
+				| name:n ASG expr:exp
+				{: RESULT = new asgNode(n ,exp , n.linenum, n.colnum);
+				:}
 			;
 		
-type			::= rw_INT
-				| rw_CHAR
-				| rw_BOOL
-				| rw_FLOAT
+type			::= rw_INT:l
+				{: RESULT = new intTypeNode(l.linenum, l.colnum);
+				:}
+				| rw_CHAR:l
+				{: RESULT = new charTypeNode(l.linenum, l.colnum);
+				:}
+				| rw_BOOL:l
+				{: RESULT = new boolTypeNode( l.linenum, l.colnum);
+				:}
+				| rw_FLOAT:l
+				{: RESULT = new floatTypeNode( l.linenum, l.colnum);
+				:}
 			;
 			
-args			::= expr COMMA args
+args			::= expr:e COMMA args:a
+				{: RESULT = new argsNode( e, a, e.linenum, e.colnum);
+				:}
 				| expr
 			;
 				
-readlist		::= name COMMA readlist
+readlist		::= name:n COMMA readlist:r
+				{: RESULT = new readNode( n, r, n.linenum, n.colnum);
+				:}
 				| name
 			;
 			
-printlist		::= expr COMMA printlist
+printlist		::= expr:e COMMA printlist:p
+				{: RESULT = new printNode( e, p, e.linenum, e.colnum);
+				:}
 				| expr
 			;
 			
-expr			::= expr COR term
-				| expr CAND term
+expr			::= expr:l COR term:r
+				{: RESULT = new binaryOpNode(l, 27, r, l.linenum, l.colnum);
+				:}
+				| expr:l CAND term:r
+				{: RESULT = new binaryOpNode(l, 38, r, l.linenum, l.colnum);
+				:}
 				| term
 			;
 			
-term			::= factor LT factor
-				| factor GT factor
-				| factor LEQ factor
-				| factor GEQ factor
-				| factor EQ factor
-				| factor NOTEQ factor
+term			::= factor:l LT factor:r
+				{: RESULT = new binaryOpNode(l, 18, r, l.linenum, l.colnum);
+				:}
+				| factor:l GT factor:r
+				{: RESULT = new binaryOpNode(l, 42, r, l.linenum, l.colnum);
+				:}
+				| factor:l LEQ factor:r
+				{: RESULT = new binaryOpNode(l, 39, r, l.linenum, l.colnum);
+				:}
+				| factor:l GEQ factor:r
+				{: RESULT = new binaryOpNode(l, 23, r, l.linenum, l.colnum);
+				:}
+				| factor:l EQ factor:r
+				{: RESULT = new binaryOpNode(l, 30, r, l.linenum, l.colnum);
+				:}
+				| factor:l NOTEQ factor:r
+				{: RESULT = new binaryOpNode(l, 43, r, l.linenum, l.colnum);
+				:}				
 				| factor
 			;
 			
-factor			::= factor PLUS pri
-				| factor MINUS pri
+factor			::= factor:l PLUS pri:r
+				{: RESULT = new binaryOpNode(l, 47, r, l.linenum, l.colnum);
+				:}
+				| factor:l MINUS pri:r
+				{: RESULT = new binaryOpNode(l, 48, r, l.linenum, l.colnum);
+				:}
 				| pri
 			;
 
-pri				::= pri TIMES unary
-				| pri SLASH unary
+pri				::= pri:l TIMES unary:r
+				{: RESULT = new binaryOpNode(l, 46, r, l.linenum, l.colnum);
+				:}
+				| pri:l SLASH unary:r
+				{: RESULT = new binaryOpNode(l, 45, r, l.linenum, l.colnum);
+				:}
 				| unary
 			;
 			
-unary			::= NOT unary
-				| LPAREN type RPAREN unary
+unary			::= NOT:opp unary:u
+				{: RESULT = new unaryOpNode( 15, u, u.linenum, u.colnum);
+				:}
+				| LPAREN:l type:t RPAREN unary:u
+				{: RESULT = new castNode(t, u ,l.linenum, l.colnum);
+				:}
 				| unit
 			;
 			
@@ -290,22 +342,28 @@ unit			::= name
 				/* fctCallNode */
 				| ident:id LPAREN args:ar RPAREN
 				/* fctCallNode */
-				| intlit:il
+
+				| INTLIT:i
+				{:
+				CSXIntLitToken il = (CSXIntLitToken)i;	
+				RESULT = new intLitNode(il.intValue,
+				il.linenum, il.colnum);
+				:}
+				| CHARLIT:i
 				{: 
-					RESULT = il;
+				CSXCharLitToken cl = (CSXCharLitToken)i;	
+				RESULT = new charLitNode(cl.charValue,
+				cl.linenum, cl.colnum);
 				:}
-				| CHARLIT:cl
+				| FLOATLIT:i
 				{:
-					RESULT = new floatLitNode(cl.charValue,
-					cl.linenum, cl.colnum);
-				:}
-				| FLOATLIT:fl
-				{:
+					CSXFloatLitToken fl = (CSXFloatLitToken)i;	
 					RESULT = new floatLitNode(fl.floatValue,
 					fl.linenum, fl.colnum);
 				:}
-				| STRLIT:sl
+				| STRLIT:i
 				{:
+					CSXStringLitToken sl = (CSXStringLitToken)i;					
 					RESULT = new strLitNode(sl.stringValue,
 					sl.linenum, sl.colnum);
 				:}
@@ -320,24 +378,23 @@ unit			::= name
 					f.linenum, f.colnum);
 				:}
 				| LPAREN expr RPAREN
-				
 			;
 			
 ident			::= IDENTIFIER:i
 				{: 
 					CSXIdentifierToken identToken = (CSXIdentifierToken)i;
-					RESULT = new identNode(identToken.identifierText,
+					RESULT = new identNode(identToken.identifierValue,
 						 identToken.linenum,identToken.colnum);
 				 :}
 			;
 			
 name			::= ident:id
 				{:
-					RESULT = new nameNode(id, exprNode.NULL, i.linenum,i.colnum);
+					RESULT = new nameNode(id, exprNode.NULL, id.linenum,id.colnum);
 				:}
 				| ident:id LBRACKET expr:e RBRACKET
 				{:
-					RESULT = new nameNode(id, e, i.linenum,i.colnum);
+					RESULT = new nameNode(id, e, id.linenum,id.colnum);
 				:}	
 			;
 			
