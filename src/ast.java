@@ -680,25 +680,41 @@ class falseNode extends exprNode {
 } // class falseNode 
 
 class preIncrStmtNode extends stmtNode {
-	preIncrStmtNode(int line, int col) {
+	preIncrStmtNode(nameNode id, int line, int col) {
 		super(line, col);
+		
+		targetID = id;
 	}
+	
+	private nameNode targetID;
 } // class preIncrStmtNode 
 
 class postIncrStmtNode extends stmtNode {
-	postIncrStmtNode(int line, int col) {
+	postIncrStmtNode(nameNode id, int line, int col) {
 		super(line, col);
+		
+		targetID = id;
 	}
+	
+	private nameNode targetID;
 } // class postIncrStmtNode 
 
 class preDecStmtNode extends stmtNode {
-	preDecStmtNode(int line, int col) {
+	preDecStmtNode(nameNode id, int line, int col) {
 		super(line, col);
+		
+		targetID = id;
 	}
+	
+	private nameNode targetID;
 } // class preDecStmtNode 
 
 class postDecStmtNode extends stmtNode {
-	postDecStmtNode(int line, int col) {
+	postDecStmtNode(nameNode id, int line, int col) {
 		super(line, col);
+		
+		targetID = id;
 	}
+	
+	private nameNode targetID;
 } // class postDecStmtNode 

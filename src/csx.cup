@@ -231,108 +231,134 @@ stmt			::= rw_IF:i LPAREN expr:e RPAREN stmt:s rw_ENDIF
 			;
 			
 			
-update		::= ident:id INC:inc 
-				{: RESULT = new asgNode(id, inc, id.linenum, id.colnum);
+update		::= INC:inc name:n 
+				{:
+					RESULT = new preIncrStmtNode(n, inc.linenum, inc.colnum);
 				:}
-				| INC:inc ident:id 
-				{: RESULT = new asgNode(id, inc, inc.linenum, inc.colnum);
+				| name:n INC:inc 
+				{:
+					RESULT = new postIncrStmtNode(n, n.linenum, n.colnum);
 				:}
-				| ident:id DEC:dec 
-				{: RESULT = new asgNode(id, dec, id.linenum, id.colnum);
+				| name:n DEC:dec 
+				{:
+					RESULT = new postDecStmtNode(n, n.linenum, n.colnum);
 				:}
-				| DEC:dec ident:id 
-				{: RESULT = new asgNode(id , dec, dec.linenum, dec.colnum);
+				| DEC:dec name:n 
+				{:
+					RESULT = new preDecStmtNode(n, dec.linenum, dec.colnum);
 				:}
 				| name:n ASG expr:exp
-				{: RESULT = new asgNode(n ,exp , n.linenum, n.colnum);
+				{:
+					RESULT = new asgNode(n, exp, n.linenum, n.colnum);
 				:}
 			;
 		
 type			::= rw_INT:l
-				{: RESULT = new intTypeNode(l.linenum, l.colnum);
+				{:
+					RESULT = new intTypeNode(l.linenum, l.colnum);
 				:}
 				| rw_CHAR:l
-				{: RESULT = new charTypeNode(l.linenum, l.colnum);
+				{:
+					RESULT = new charTypeNode(l.linenum, l.colnum);
 				:}
 				| rw_BOOL:l
-				{: RESULT = new boolTypeNode( l.linenum, l.colnum);
+				{:
+					RESULT = new boolTypeNode( l.linenum, l.colnum);
 				:}
 				| rw_FLOAT:l
-				{: RESULT = new floatTypeNode( l.linenum, l.colnum);
+				{:
+					RESULT = new floatTypeNode( l.linenum, l.colnum);
 				:}
 			;
 			
 args			::= expr:e COMMA args:a
-				{: RESULT = new argsNode( e, a, e.linenum, e.colnum);
+				{:
+					RESULT = new argsNode( e, a, e.linenum, e.colnum);
 				:}
 				| expr
 			;
 				
 readlist		::= name:n COMMA readlist:r
-				{: RESULT = new readNode( n, r, n.linenum, n.colnum);
+				{:
+					RESULT = new readNode(n, r, n.linenum, n.colnum);
 				:}
 				| name
 			;
 			
 printlist		::= expr:e COMMA printlist:p
-				{: RESULT = new printNode( e, p, e.linenum, e.colnum);
+				{:
+					RESULT = new printNode( e, p, e.linenum, e.colnum);
 				:}
 				| expr
 			;
 			
 expr			::= expr:l COR term:r
-				{: RESULT = new binaryOpNode(l, 27, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 27, r, l.linenum, l.colnum);
 				:}
 				| expr:l CAND term:r
-				{: RESULT = new binaryOpNode(l, 38, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 38, r, l.linenum, l.colnum);
 				:}
 				| term
 			;
 			
 term			::= factor:l LT factor:r
-				{: RESULT = new binaryOpNode(l, 18, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 18, r, l.linenum, l.colnum);
 				:}
 				| factor:l GT factor:r
-				{: RESULT = new binaryOpNode(l, 42, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 42, r, l.linenum, l.colnum);
 				:}
 				| factor:l LEQ factor:r
-				{: RESULT = new binaryOpNode(l, 39, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 39, r, l.linenum, l.colnum);
 				:}
 				| factor:l GEQ factor:r
-				{: RESULT = new binaryOpNode(l, 23, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 23, r, l.linenum, l.colnum);
 				:}
 				| factor:l EQ factor:r
-				{: RESULT = new binaryOpNode(l, 30, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 30, r, l.linenum, l.colnum);
 				:}
 				| factor:l NOTEQ factor:r
-				{: RESULT = new binaryOpNode(l, 43, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 43, r, l.linenum, l.colnum);
 				:}				
 				| factor
 			;
 			
 factor			::= factor:l PLUS pri:r
-				{: RESULT = new binaryOpNode(l, 47, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 47, r, l.linenum, l.colnum);
 				:}
 				| factor:l MINUS pri:r
-				{: RESULT = new binaryOpNode(l, 48, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 48, r, l.linenum, l.colnum);
 				:}
 				| pri
 			;
 
 pri				::= pri:l TIMES unary:r
-				{: RESULT = new binaryOpNode(l, 46, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 46, r, l.linenum, l.colnum);
 				:}
 				| pri:l SLASH unary:r
-				{: RESULT = new binaryOpNode(l, 45, r, l.linenum, l.colnum);
+				{:
+					RESULT = new binaryOpNode(l, 45, r, l.linenum, l.colnum);
 				:}
 				| unary
 			;
 			
 unary			::= NOT:opp unary:u
-				{: RESULT = new unaryOpNode( 15, u, u.linenum, u.colnum);
+				{:
+					RESULT = new unaryOpNode( 15, u, u.linenum, u.colnum);
 				:}
 				| LPAREN:l type:t RPAREN unary:u
-				{: RESULT = new castNode(t, u ,l.linenum, l.colnum);
+				{:
+					RESULT = new castNode(t, u ,l.linenum, l.colnum);
 				:}
 				| unit
 			;
@@ -345,15 +371,15 @@ unit			::= name
 
 				| INTLIT:i
 				{:
-				CSXIntLitToken il = (CSXIntLitToken)i;	
-				RESULT = new intLitNode(il.intValue,
-				il.linenum, il.colnum);
+					CSXIntLitToken il = (CSXIntLitToken)i;	
+					RESULT = new intLitNode(il.intValue,
+					il.linenum, il.colnum);
 				:}
 				| CHARLIT:i
 				{: 
-				CSXCharLitToken cl = (CSXCharLitToken)i;	
-				RESULT = new charLitNode(cl.charValue,
-				cl.linenum, cl.colnum);
+					CSXCharLitToken cl = (CSXCharLitToken)i;	
+					RESULT = new charLitNode(cl.charValue,
+					cl.linenum, cl.colnum);
 				:}
 				| FLOATLIT:i
 				{:
@@ -385,7 +411,7 @@ ident			::= IDENTIFIER:i
 					CSXIdentifierToken identToken = (CSXIdentifierToken)i;
 					RESULT = new identNode(identToken.identifierValue,
 						 identToken.linenum,identToken.colnum);
-				 :}
+				:}
 			;
 			
 name			::= ident:id
