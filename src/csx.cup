@@ -164,8 +164,14 @@ fielddecl		::= type:t ident:id SEMI
 				:}
 			;
 			
-stmts			::= stmt stmts
-				| stmt
+stmts			::= stmt:stmt stmts:stmts
+				{:
+					RESULT = new stmtsNode(stmt, stmts, stmt.linenum, stmt.colnum);
+				:}
+				| stmt:stmt
+				{:
+					RESULT = new stmtsNode(stmt, stmtsNode.NULL, stmt.linenum, stmt.colnum);
+				:}
 			;
 			
 stmt			::= rw_IF:i LPAREN expr:e RPAREN stmt:s rw_ENDIF
