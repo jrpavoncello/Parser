@@ -636,7 +636,7 @@ class nameNode extends exprNode {
 		varName.Unparse(0); // Subscripts not allowed in CSX Lite
 	}
 
-	private final identNode varName;
+	public final identNode varName;
 	private final exprNode subscriptVal;
 } // class nameNode 
 

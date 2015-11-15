@@ -44,9 +44,9 @@ non terminal argsNode	     	args;
 non terminal readNode	     	readlist;
 non terminal printNode	     	printlist;
 non terminal exprNode	     	expr;
-non terminal binaryOpNode     	term;
-non terminal binaryOpNode     	factor;
-non terminal binaryOpNode     	pri;
+non terminal exprNode	     	term;
+non terminal exprNode	     	factor;
+non terminal exprNode 	    	pri;
 non terminal exprNode	     	unary;
 non terminal exprNode	     	unit;
 non terminal nameNode	     	name;
@@ -281,21 +281,30 @@ args			::= expr:e COMMA args:a
 				{:
 					RESULT = new argsNode( e, a, e.linenum, e.colnum);
 				:}
-				| expr
+				| expr:e
+				{:
+					RESULT = new argsNode( e, argsNode.NULL, e.linenum, e.colnum);
+				:}
 			;
 				
 readlist		::= name:n COMMA readlist:r
 				{:
 					RESULT = new readNode(n, r, n.linenum, n.colnum);
 				:}
-				| name
+				| name:n
+				{:
+					RESULT = new readNode(n, readNode.NULL , n.linenum, n.colnum);
+				:}
 			;
 			
 printlist		::= expr:e COMMA printlist:p
 				{:
 					RESULT = new printNode( e, p, e.linenum, e.colnum);
 				:}
-				| expr
+				| expr:e
+				{:
+					RESULT = new printNode( e, printNode.NULL , e.linenum, e.colnum);
+				:}
 			;
 			
 expr			::= expr:l COR term:r
@@ -306,7 +315,10 @@ expr			::= expr:l COR term:r
 				{:
 					RESULT = new binaryOpNode(l, 38, r, l.linenum, l.colnum);
 				:}
-				| term
+				| term:l /* */ 
+				{:
+					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+				:}
 			;
 			
 term			::= factor:l LT factor:r
@@ -333,7 +345,10 @@ term			::= factor:l LT factor:r
 				{:
 					RESULT = new binaryOpNode(l, 43, r, l.linenum, l.colnum);
 				:}				
-				| factor
+				| factor:l
+				{:
+					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+				:}
 			;
 			
 factor			::= factor:l PLUS pri:r
@@ -344,7 +359,10 @@ factor			::= factor:l PLUS pri:r
 				{:
 					RESULT = new binaryOpNode(l, 48, r, l.linenum, l.colnum);
 				:}
-				| pri
+				| pri:l
+				{:
+					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+				:}
 			;
 
 pri				::= pri:l TIMES unary:r
@@ -355,7 +373,10 @@ pri				::= pri:l TIMES unary:r
 				{:
 					RESULT = new binaryOpNode(l, 45, r, l.linenum, l.colnum);
 				:}
-				| unary
+				| unary:l
+				{:
+					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+				:}
 			;
 			
 unary			::= NOT:opp unary:u
@@ -366,15 +387,24 @@ unary			::= NOT:opp unary:u
 				{:
 					RESULT = new castNode(t, u ,l.linenum, l.colnum);
 				:}
-				| unit
+				| unit:l
+				{:
+					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+				:}
 			;
 			
-unit			::= name
-				| ident LPAREN RPAREN
-				/* fctCallNode */
+unit			::= name:id
+				{:
+					RESULT = new nameNode(id.varName, exprNode.NULL, id.linenum,id.colnum);
+				:}	
+				| ident:id LPAREN RPAREN
+				{:
+					RESULT = new fctCallNode(id, argsNode.NULL , id.linenum, id.colnum);
+				:}		
 				| ident:id LPAREN args:ar RPAREN
-				/* fctCallNode */
-
+				{:						
+					RESULT = new fctCallNode(id, ar , id.linenum, id.colnum);
+				:}	
 				| INTLIT:i
 				{:
 					CSXIntLitToken il = (CSXIntLitToken)i;	
@@ -409,7 +439,10 @@ unit			::= name
 					RESULT = new falseNode(
 					f.linenum, f.colnum);
 				:}
-				| LPAREN expr RPAREN
+				| LPAREN:l expr:e RPAREN
+				{:
+					RESULT = new unaryOpNode( 44, e,  l.linenum, l.colnum);
+				:}
 			;
 			
 ident			::= IDENTIFIER:i
