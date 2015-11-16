@@ -63,14 +63,16 @@ class csxLiteNode extends ASTNode {
 
 class classNode extends ASTNode {
 
-	classNode(identNode id, memberDeclsNode memb, int line, int col) {
+	classNode(identNode id, memberDeclsNode memb, int line, int col, int closingLine) {
 		super(line, col);
 		className = id;
 		members = memb;
+		closingLineNum = closingLine;
 	} // classNode
 
 	private final identNode className;
 	private final memberDeclsNode members;
+	private int closingLineNum;
 } // class classNode
 
 class memberDeclsNode extends ASTNode {
@@ -224,13 +226,14 @@ class nullMethodDeclsNode extends methodDeclsNode {
 
 class methodDeclNode extends ASTNode {
 	methodDeclNode(identNode id, argDeclsNode a, typeNode t,
-			fieldDeclsNode f, stmtsNode s, int line, int col) {
+			fieldDeclsNode f, stmtsNode s, int line, int col, int closingLine) {
 		super(line, col);
 		name = id;
 		args = a;
 		returnType = t;
 		decls = f;
 		stmts = s;
+		closingLineNum = closingLine;
 	}
 
 	private final identNode name;
@@ -238,6 +241,7 @@ class methodDeclNode extends ASTNode {
 	private final typeNode returnType;
 	private final fieldDeclsNode decls;
 	private final stmtsNode stmts;
+	private int closingLineNum;
 } // class methodDeclNode 
 
 // abstract superclass; only subclasses are actually created
@@ -468,14 +472,16 @@ class returnNode extends stmtNode {
 } // class returnNode 
 
 class blockNode extends stmtNode {
-	blockNode(fieldDeclsNode f, stmtsNode s, int line, int col) {
+	blockNode(fieldDeclsNode f, stmtsNode s, int line, int col, int closingLine) {
 		super(line, col);
 		decls = f;
 		stmts = s;
+		closingLineNum = closingLine;
 	}
 
 	private final fieldDeclsNode decls;
 	private final stmtsNode stmts;
+	private int closingLineNum;
 } // class blockNode 
 
 class breakNode extends stmtNode {

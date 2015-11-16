@@ -57,9 +57,9 @@ non terminal intLitNode			intlit;
 
 start with prog;
 
-prog			::= rw_CLASS:c ident:id LBRACE memberdecls:m RBRACE
+prog			::= rw_CLASS:c ident:id LBRACE memberdecls:m RBRACE:rb
 				{:
-					RESULT = new classNode(id, m, c.linenum, c.colnum);
+					RESULT = new classNode(id, m, c.linenum, c.colnum, rb.linenum);
 				:}
 			;
 		
@@ -102,21 +102,21 @@ optionalsemi	::= SEMI
 				| /* NULL */
 			;
 				
-methoddecl		::= void:v ident:id LPAREN RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE optionalsemi
+methoddecl		::= void:v ident:id LPAREN RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE:rb optionalsemi
 				{:
-					RESULT = new methodDeclNode(id, argDeclsNode.NULL, v, fDecls, s, v.linenum, v.colnum);
+					RESULT = new methodDeclNode(id, argDeclsNode.NULL, v, fDecls, s, v.linenum, v.colnum, rb.linenum);
 				:}
-				| void:v ident:id LPAREN argdecls:aDecls RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE optionalsemi
+				| void:v ident:id LPAREN argdecls:aDecls RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE:rb optionalsemi
 				{:
-					RESULT = new methodDeclNode(id, aDecls, v, fDecls, s, v.linenum, v.colnum);
+					RESULT = new methodDeclNode(id, aDecls, v, fDecls, s, v.linenum, v.colnum, rb.linenum);
 				:}
-				| type:t ident:id LPAREN RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE optionalsemi
+				| type:t ident:id LPAREN RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE:rb optionalsemi
 				{:
-					RESULT = new methodDeclNode(id, argDeclsNode.NULL, t, fDecls, s, t.linenum, t.colnum);
+					RESULT = new methodDeclNode(id, argDeclsNode.NULL, t, fDecls, s, t.linenum, t.colnum, rb.linenum);
 				:}
-				| type:t ident:id LPAREN argdecls:aDecls RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE optionalsemi
+				| type:t ident:id LPAREN argdecls:aDecls RPAREN LBRACE fielddecls:fDecls stmts:s RBRACE:rb optionalsemi
 				{:
-					RESULT = new methodDeclNode(id, aDecls, t, fDecls, s, t.linenum, t.colnum);
+					RESULT = new methodDeclNode(id, aDecls, t, fDecls, s, t.linenum, t.colnum, rb.linenum);
 				:}
 			;
 
@@ -226,9 +226,9 @@ stmt			::= rw_IF:i LPAREN expr:e RPAREN stmt:s rw_ENDIF
 				{:
 					RESULT = new continueNode(id, c.linenum, c.colnum); 
 				:}
-				| LBRACE:lb fielddecls:fDecls stmts:s RBRACE optionalsemi
+				| LBRACE:lb fielddecls:fDecls stmts:s RBRACE:rb optionalsemi
 				{:
-					RESULT = new blockNode(fDecls, s, lb.linenum, lb.colnum);
+					RESULT = new blockNode(fDecls, s, lb.linenum, lb.colnum, rb.linenum);
 				:}
 				| rw_FOR:f LPAREN ident:id ASG expr:initExpr SEMI expr:condExpr SEMI update:upExpr RPAREN stmt:s
 				{:
