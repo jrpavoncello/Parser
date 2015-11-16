@@ -850,10 +850,30 @@ class binaryOpNode extends exprNode {
 			case sym.SLASH:
 				System.out.print(" / ");
 				break;
+			case sym.LT:
+				System.out.print(" < ");
+				break;
+			case sym.GT:
+				System.out.print(" > ");
+				break;
+			case sym.GEQ:
+				System.out.print(" >= ");
+				break;
+			case sym.LEQ:
+				System.out.print(" <= ");
+			break;
+			case sym.COR:
+				System.out.print(" || ");
+			break;
+			case sym.CAND:
+				System.out.print(" && ");
+			break;
+			
 			default:
 				throw new Error("printOp: case not found");
 		}
 	}
+
 
 	void Unparse(int indent) {
 		System.out.print("(");
@@ -876,8 +896,10 @@ class unaryOpNode extends exprNode {
 	}
 
 	void Unparse(int indent) {
-		System.out.print("!");
-		operand.Unparse(0);
+		if(operatorCode == sym.NOT){
+			System.out.print("!");
+		}
+		operand.Unparse(0);	
 	}
 	
 	private final exprNode operand;
