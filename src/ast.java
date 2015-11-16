@@ -93,7 +93,7 @@ class classNode extends ASTNode {
 		genIndent(indent);
 		System.out.print("class ");
 		className.Unparse(0); // Print class name only, no indent
-		System.out.print(" {");
+		System.out.println(" {");
 		
 		members.Unparse(indent + 1); // Print members with an additional indent
 		
@@ -343,7 +343,7 @@ class methodDeclNode extends ASTNode {
 		name.Unparse(0);
 		System.out.print("(");
 		args.Unparse(0);
-		System.out.print("){");
+		System.out.println("){");
 		stmts.Unparse(indent + 1);
 		System.out.print(closingLineNum + ": ");
 		genIndent(indent);
@@ -560,6 +560,7 @@ class forNode extends stmtNode {
 
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
+		genIndent(indent);
 		System.out.print("for (");
 		loopVar.Unparse(0);
 		System.out.print(" = ");
