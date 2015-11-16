@@ -596,7 +596,10 @@ class castNode extends exprNode {
 		operand = e;
 		resultType = t;
 	}
-
+	void Unparse(int indent) {
+		System.out.println("Casting to");
+	//	resultsType.Unparse(indent);
+	}
 	private final exprNode operand;
 	private final typeNode resultType;
 } // class castNode 
@@ -608,6 +611,10 @@ class fctCallNode extends exprNode {
 		methodArgs = a;
 	}
 
+	void Unparse(int indent) {
+		methodName.Unparse(indent);
+		//argsNode.Unparse(indent);
+	}
 	private final identNode methodName;
 	private final argsNode methodArgs;
 } // class fctCallNode 
@@ -645,7 +652,10 @@ class intLitNode extends exprNode {
 		super(line, col);
 		intval = val;
 	}
-
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("intLit:"+ intval);
+	}
 	private final int intval;
 } // class intLitNode
 
@@ -654,7 +664,10 @@ class floatLitNode extends exprNode {
 		super(line, col);
 		floatval = val;
 	}
-
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("floatLit:"+ floatval);
+	}
 	private final float floatval;
 } // class floatLitNode
 
@@ -663,7 +676,10 @@ class charLitNode extends exprNode {
 		super(line, col);
 		charval = val;
 	}
-
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("charLit:"+ charval);
+	}
 	private final char charval;
 } // class charLitNode 
 
@@ -671,11 +687,20 @@ class trueNode extends exprNode {
 	trueNode(int line, int col) {
 		super(line, col);
 	}
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("False");
+	}
 } // class trueNode 
 
 class falseNode extends exprNode {
 	falseNode(int line, int col) {
 		super(line, col);
+	}
+	
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("False");
 	}
 } // class falseNode 
 
@@ -685,7 +710,11 @@ class preIncrStmtNode extends stmtNode {
 		
 		targetID = id;
 	}
-	
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("pre Increment");
+		targetID.Unparse(indent);
+	}
 	private nameNode targetID;
 } // class preIncrStmtNode 
 
@@ -695,7 +724,11 @@ class postIncrStmtNode extends stmtNode {
 		
 		targetID = id;
 	}
-	
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("post Increment");
+		targetID.Unparse(indent);
+	}
 	private nameNode targetID;
 } // class postIncrStmtNode 
 
@@ -704,6 +737,12 @@ class preDecStmtNode extends stmtNode {
 		super(line, col);
 		
 		targetID = id;
+	}
+	
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("pre decrement");
+		targetID.Unparse(indent);
 	}
 	
 	private nameNode targetID;
@@ -716,5 +755,10 @@ class postDecStmtNode extends stmtNode {
 		targetID = id;
 	}
 	
+	void Unparse(int indent) {
+		genIndent(indent);
+		System.out.println("post decrement");
+		targetID.Unparse(indent);
+	}
 	private nameNode targetID;
 } // class postDecStmtNode 
