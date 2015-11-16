@@ -844,6 +844,12 @@ class binaryOpNode extends exprNode {
 			case sym.MINUS:
 				System.out.print(" - ");
 				break;
+			case sym.TIMES:
+				System.out.print(" * ");
+				break;
+			case sym.SLASH:
+				System.out.print(" / ");
+				break;
 			default:
 				throw new Error("printOp: case not found");
 		}
@@ -869,6 +875,11 @@ class unaryOpNode extends exprNode {
 		operatorCode = op;
 	}
 
+	void Unparse(int indent) {
+		System.out.print("!");
+		operand.Unparse(0);
+	}
+	
 	private final exprNode operand;
 	private final int operatorCode; // Token code of the operator
 } // class unaryOpNode 
@@ -879,9 +890,16 @@ class castNode extends exprNode {
 		operand = e;
 		resultType = t;
 	}
+	
+	
+	
 	void Unparse(int indent) {
-		System.out.println("Casting to");
-	//	resultsType.Unparse(indent);
+		System.out.println("(");
+		resultType.Unparse(0);
+		System.out.println(")");
+
+		operand.Unparse(0);
+		
 	}
 	private final exprNode operand;
 	private final typeNode resultType;
@@ -896,6 +914,9 @@ class fctCallNode extends exprNode {
 
 	void Unparse(int indent) {
 		methodName.Unparse(indent);
+		System.out.print('(');
+		methodArgs.Unparse(0);
+		System.out.print(");");
 		//argsNode.Unparse(indent);
 	}
 	private final identNode methodName;
@@ -923,7 +944,7 @@ class nameNode extends exprNode {
 	}
 
 	void Unparse(int indent) {
-		varName.Unparse(0); // Subscripts not allowed in CSX Lite
+		varName.Unparse(indent); // Subscripts not allowed in CSX Lite
 	}
 
 	public final identNode varName;
@@ -936,8 +957,7 @@ class intLitNode extends exprNode {
 		intval = val;
 	}
 	void Unparse(int indent) {
-		genIndent(indent);
-		System.out.println("intLit:"+ intval);
+		System.out.println(intval);
 	}
 	private final int intval;
 } // class intLitNode
@@ -948,8 +968,7 @@ class floatLitNode extends exprNode {
 		floatval = val;
 	}
 	void Unparse(int indent) {
-		genIndent(indent);
-		System.out.println("floatLit:"+ floatval);
+		System.out.println(floatval);
 	}
 	private final float floatval;
 } // class floatLitNode
@@ -960,8 +979,7 @@ class charLitNode extends exprNode {
 		charval = val;
 	}
 	void Unparse(int indent) {
-		genIndent(indent);
-		System.out.println("charLit:"+ charval);
+		System.out.println(charval);
 	}
 	private final char charval;
 } // class charLitNode 
@@ -971,8 +989,7 @@ class trueNode extends exprNode {
 		super(line, col);
 	}
 	void Unparse(int indent) {
-		genIndent(indent);
-		System.out.println("False");
+		System.out.print("True");
 	}
 } // class trueNode 
 
@@ -982,8 +999,7 @@ class falseNode extends exprNode {
 	}
 	
 	void Unparse(int indent) {
-		genIndent(indent);
-		System.out.println("False");
+		System.out.print("False");
 	}
 } // class falseNode 
 
@@ -995,7 +1011,7 @@ class preIncrStmtNode extends stmtNode {
 	}
 	void Unparse(int indent) {
 		genIndent(indent);
-		System.out.println("pre Increment");
+		System.out.print("++");
 		targetID.Unparse(indent);
 	}
 	private nameNode targetID;
@@ -1009,8 +1025,8 @@ class postIncrStmtNode extends stmtNode {
 	}
 	void Unparse(int indent) {
 		genIndent(indent);
-		System.out.println("post Increment");
 		targetID.Unparse(indent);
+		System.out.print("++");
 	}
 	private nameNode targetID;
 } // class postIncrStmtNode 
@@ -1024,7 +1040,7 @@ class preDecStmtNode extends stmtNode {
 	
 	void Unparse(int indent) {
 		genIndent(indent);
-		System.out.println("pre decrement");
+		System.out.print("--");
 		targetID.Unparse(indent);
 	}
 	
@@ -1040,8 +1056,8 @@ class postDecStmtNode extends stmtNode {
 	
 	void Unparse(int indent) {
 		genIndent(indent);
-		System.out.println("post decrement");
 		targetID.Unparse(indent);
+		System.out.print("--");
 	}
 	private nameNode targetID;
 } // class postDecStmtNode 
