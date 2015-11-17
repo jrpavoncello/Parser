@@ -577,8 +577,9 @@ class ifThenNode extends stmtNode {
 		{
 			System.out.print(thenPart.linenum + ":");
 			genIndent(indent + 1);
-			thenPart.Unparse(indent + 1);
 		}
+
+		thenPart.Unparse(indent + 1);
 		
 		if(!(thenPart instanceof ifThenNode))
 		{
@@ -586,13 +587,13 @@ class ifThenNode extends stmtNode {
 		}
 		
 		System.out.println();
-
-		System.out.print(linenum + ":");
-		genIndent(indent);
-		System.out.println("else");
 		
 		if(!(elsePart instanceof nullStmtNode))
 		{
+			System.out.print(linenum + ":");
+			genIndent(indent);
+			System.out.println("else");
+			
 			if(!(elsePart instanceof blockNode))
 			{
 				System.out.print(elsePart.linenum + ":");
