@@ -507,7 +507,13 @@ class stmtsNode extends ASTNode {
 		System.out.print(thisStmt.linenum + ":");
 		genIndent(indent);
 		thisStmt.Unparse(indent);
-		System.out.println(";");
+		
+		if(!(thisStmt instanceof ifThenNode))
+		{
+			System.out.print(";");
+		}
+		
+		System.out.println();
 		moreStmts.Unparse(indent);
 	} 
 
@@ -566,11 +572,24 @@ class ifThenNode extends stmtNode {
 		System.out.print("if (");
 		condition.Unparse(0);
 		System.out.println(")");
+		System.out.print(thenPart.linenum + ":");
+		genIndent(indent + 1);
 		thenPart.Unparse(indent + 1);
+		System.out.println(";");
+
+		System.out.print(linenum + ":");
+		genIndent(indent);
+		System.out.println("else");
 		
 		if(!(elsePart instanceof nullStmtNode))
 		{
+			if(!(elsePart instanceof blockNode))
+			{
+				System.out.print(elsePart.linenum + ":");
+			}
+			
 			elsePart.Unparse(indent + 1);
+			System.out.println(";");
 		}
 		
 		System.out.print(endifLineNum + ": ");
@@ -1125,7 +1144,6 @@ class postIncrStmtNode extends stmtNode {
 		targetID = id;
 	}
 	void Unparse(int indent) {
-		genIndent(indent);
 		targetID.Unparse(indent);
 		System.out.print("++");
 	}
@@ -1140,7 +1158,6 @@ class preDecStmtNode extends stmtNode {
 	}
 	
 	void Unparse(int indent) {
-		genIndent(indent);
 		System.out.print("--");
 		targetID.Unparse(indent);
 	}
@@ -1156,7 +1173,6 @@ class postDecStmtNode extends stmtNode {
 	}
 	
 	void Unparse(int indent) {
-		genIndent(indent);
 		targetID.Unparse(indent);
 		System.out.print("--");
 	}
