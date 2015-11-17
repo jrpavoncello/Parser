@@ -230,11 +230,12 @@ class arrayDeclNode extends declNode {
 	private final intLitNode arraySize;
 
 	//Print like:
-	//##:	id = type[intlit];
+	//##:	type id[intlit];
 	void Unparse(int indent) {
 		System.out.print(linenum + ": ");
 		genIndent(indent);
 		elementType.Unparse(0);
+		System.out.print(" ");
 		arrayName.Unparse(0);
 		System.out.print("[");
 		arraySize.Unparse(0);
@@ -440,11 +441,12 @@ class arrayArgDeclNode extends argDeclNode {
 	private final typeNode elementType;
 	
 	//Print like:
-	//	type[] id;
+	//	type id[]
 	void Unparse(int indent) {
 		elementType.Unparse(0);
-		System.out.print("[] ");
+		System.out.print(" ");
 		argName.Unparse(0);
+		System.out.print("[]");
 	}
 } // class arrayArgDeclNode 
 
