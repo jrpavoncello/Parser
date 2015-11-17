@@ -636,6 +636,13 @@ class whileNode extends stmtNode {
 		System.out.print(" : while (");
 		condition.Unparse(0);
 		System.out.println(")");
+		
+		if(!(loopBody instanceof blockNode))
+		{
+			System.out.print(loopBody.linenum + ":");
+			genIndent(indent + 1);
+		}
+		
 		loopBody.Unparse(indent + 1);
 	}
 } // class whileNode 
