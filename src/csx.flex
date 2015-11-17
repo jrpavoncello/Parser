@@ -471,7 +471,7 @@ Tokens for the CSX language are defined here using regular expressions
 	// Match on a single line comment, does not include the newline so no need to increment the row
 	yybegin(YYINITIAL);
 	String comment = yytext();
-    System.out.println("Line Comment: " + comment);
+    //System.out.println("Line Comment: " + comment);
     Pos.setpos();
     Pos.col += comment.length();
     Pos.line ++;
@@ -498,7 +498,7 @@ Tokens for the CSX language are defined here using regular expressions
 	}
 	
 	//Print out the comment for debug purposes
-    System.out.println("Block Comment: " + parseString);
+    //System.out.println("Block Comment: " + parseString);
 }
 
 {CHARLIT}
