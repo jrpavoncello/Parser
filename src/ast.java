@@ -504,6 +504,8 @@ class stmtsNode extends ASTNode {
 	//	...
 	//	lastStmt
 	void Unparse(int indent) {
+		System.out.print(thisStmt.linenum + ":");
+		genIndent(indent);
 		thisStmt.Unparse(indent);
 		System.out.println(";");
 		moreStmts.Unparse(indent);
@@ -531,8 +533,6 @@ class asgNode extends stmtNode {
 	//Print like:
 	//##:	type id = expression;
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		target.Unparse(0);
 		System.out.print(" = ");
 		source.Unparse(0);
@@ -563,8 +563,6 @@ class ifThenNode extends stmtNode {
 	//			stmt
 	//##:	endif
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		System.out.print("if (");
 		condition.Unparse(0);
 		System.out.println(")");
@@ -598,8 +596,6 @@ class whileNode extends stmtNode {
 	//##:	label:while(expression)
 	//			stmt
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		label.Unparse(0);
 		System.out.print(" : while (");
 		condition.Unparse(0);
@@ -629,8 +625,6 @@ class forNode extends stmtNode {
 	//##:	for (type id = expression; expression; assignment)
 	//			stmt
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		System.out.print("for (");
 		loopVar.Unparse(0);
 		System.out.print(" = ");
@@ -658,8 +652,6 @@ class readNode extends stmtNode {
 	private readNode moreReads;
 	
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		Unparse(indent, true);
 	}
 	
@@ -713,9 +705,6 @@ class printNode extends stmtNode {
 	//the parser buids a linked list and we need to extra formatting
 	//for the first, last and in between nodes
 	void Unparse(int indent) {
-		
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		Unparse(indent, true);
 	}
 	
@@ -766,8 +755,6 @@ class callNode extends stmtNode {
 	//Print like:
 	//##:	id(args);
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		methodName.Unparse(0);
 		System.out.print(" (");
 
@@ -788,8 +775,6 @@ class returnNode extends stmtNode {
 	//Print like:
 	//##:	return expression;
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		System.out.print("return ");
 
 		returnVal.Unparse(0);
@@ -809,10 +794,10 @@ class blockNode extends stmtNode {
 	private int closingLineNum;
 	
 	//Print like:
-	//##:	{
+	//	{
 	//			fieldDeclarations
 	//			statements
-	//##:	}
+	//	}
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
 		genIndent(indent);
@@ -839,10 +824,7 @@ class breakNode extends stmtNode {
 	//Print like:
 	//##:	break label;
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		System.out.print("break ");
-
 		label.Unparse(0);
 	}
 } // class breakNode 
@@ -858,10 +840,7 @@ class continueNode extends stmtNode {
 	//Print like:
 	//##:	continue label;
 	void Unparse(int indent) {
-		System.out.print(linenum + ":");
-		genIndent(indent);
 		System.out.print("continue ");
-
 		label.Unparse(0);
 	}
 } // class continueNode 
