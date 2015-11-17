@@ -10,11 +10,13 @@ abstract class ASTNode {
 		}
 	} // genIndent
 	
+	//We will run any character through this in order to escape any special characters.
 	String escapeCharacters(char c)
 	{
 		return escapeCharacters(c);
 	}
 	
+	//We will run any string or character through this in order to escape any special characters.
 	String escapeCharacters(String toEscape)
 	{
 		return toEscape
@@ -89,6 +91,10 @@ class classNode extends ASTNode {
 	
 	void Unparse(int indent) {
 		
+		//Print like:
+		//##:	class name {
+		//			members.Unparse
+		//##:	} EOF
 		System.out.print(linenum + ": ");
 		genIndent(indent);
 		System.out.print("class ");
@@ -111,7 +117,10 @@ class memberDeclsNode extends ASTNode {
 	}
 	fieldDeclsNode fields;
 	methodDeclsNode methods;
-	
+
+	//Print like:
+	//	fields.Unparse
+	//	methods.Unparse
 	void Unparse(int indent) {
 		fields.Unparse(indent + 1);
 		methods.Unparse(indent + 1);
@@ -131,6 +140,12 @@ class fieldDeclsNode extends ASTNode {
 	private declNode thisField;
 	private fieldDeclsNode moreFields;
 	
+	//Print like:
+	//	thisField
+	//	nextField
+	//	nextField
+	//	...
+	//	lastField
 	void Unparse(int indent) {
 		thisField.Unparse(indent);
 		moreFields.Unparse(indent);
@@ -166,7 +181,9 @@ class varDeclNode extends declNode {
 	private final identNode varName;
 	private final typeNode varType;
 	private final exprNode initValue;
-	
+
+	//Print like:
+	//##:	type id = expression;
 	void Unparse(int indent) {
 		System.out.print(linenum + ": ");
 		genIndent(indent);
@@ -188,6 +205,8 @@ class constDeclNode extends declNode {
 	private final identNode constName;
 	private final exprNode constValue;
 	
+	//Print like:
+	//##:	id = expression;
 	void Unparse(int indent) {
 		System.out.print(linenum + ": ");
 		genIndent(indent);
@@ -209,7 +228,9 @@ class arrayDeclNode extends declNode {
 	private final identNode arrayName;
 	private final typeNode elementType;
 	private final intLitNode arraySize;
-	
+
+	//Print like:
+	//##:	id = type[intlit];
 	void Unparse(int indent) {
 		System.out.print(linenum + ": ");
 		genIndent(indent);
@@ -245,6 +266,7 @@ class intTypeNode extends typeNode {
 		super(line, col);
 	}
 	
+	//Just print the data type INT
 	void Unparse(int indent) {
 		System.out.print("INT");
 	}
@@ -254,7 +276,8 @@ class floatTypeNode extends typeNode {
 	floatTypeNode(int line, int col) {
 		super(line, col);
 	}
-	
+
+	//Just print the data type FLOAT
 	void Unparse(int indent) {
 		System.out.print("FLOAT");
 	}
@@ -264,7 +287,8 @@ class boolTypeNode extends typeNode {
 	boolTypeNode(int line, int col) {
 		super(line, col);
 	}
-	
+
+	//Just print the data type BOOL
 	void Unparse(int indent) {
 		System.out.print("BOOL");
 	}
@@ -274,7 +298,8 @@ class charTypeNode extends typeNode {
 	charTypeNode(int line, int col) {
 		super(line, col);
 	}
-	
+
+	//Just print the data type CHAR
 	void Unparse(int indent) {
 		System.out.print("CHAR");
 	}
@@ -284,7 +309,8 @@ class voidTypeNode extends typeNode {
 	voidTypeNode(int line, int col) {
 		super(line, col);
 	}
-	
+
+	//Just print the data type VOID
 	void Unparse(int indent) {
 		System.out.print("VOID");
 	}
@@ -303,7 +329,13 @@ class methodDeclsNode extends ASTNode {
 	static nullMethodDeclsNode NULL = new nullMethodDeclsNode();
 	private methodDeclNode thisDecl;
 	private methodDeclsNode moreDecls;
-	
+
+	//Print like:
+	//	thisDeclaration
+	//	nextDeclaration
+	//	nextDeclaration
+	//	...
+	//	lastDeclaration
 	void Unparse(int indent) {
 		thisDecl.Unparse(indent);
 		moreDecls.Unparse(indent);
@@ -334,7 +366,11 @@ class methodDeclNode extends ASTNode {
 	private final fieldDeclsNode decls;
 	private final stmtsNode stmts;
 	private int closingLineNum;
-	
+
+	//Print like:
+	//	type id(args){
+	//		statements
+	//	}
 	void Unparse(int indent) {
 		System.out.print(linenum + ": ");
 		genIndent(indent);
@@ -373,7 +409,9 @@ class argDeclsNode extends ASTNode {
 
 	private argDeclNode thisDecl;
 	private argDeclsNode moreDecls;
-	
+
+	//Print like:
+	//	thisArg, nextArg, nextArg, ... , lastArg
 	void Unparse(int indent) {
 		thisDecl.Unparse(0);
 		if(!(moreDecls instanceof nullArgDeclsNode))
@@ -399,6 +437,8 @@ class arrayArgDeclNode extends argDeclNode {
 	private final identNode argName;
 	private final typeNode elementType;
 	
+	//Print like:
+	//	type[] id;
 	void Unparse(int indent) {
 		elementType.Unparse(0);
 		System.out.print("[] ");
@@ -416,6 +456,8 @@ class valArgDeclNode extends argDeclNode {
 	private final identNode argName;
 	private final typeNode argType;
 	
+	//Print like:
+	//	type id
 	void Unparse(int indent) {
 		argType.Unparse(0);
 		System.out.print(" ");
@@ -448,6 +490,12 @@ class stmtsNode extends ASTNode {
 	}
 	stmtsNode() {}
 
+	//Print like:
+	//	thisStmt
+	//	nextStmt
+	//	nextStmt
+	//	...
+	//	lastStmt
 	void Unparse(int indent) {
 		thisStmt.Unparse(indent);
 		moreStmts.Unparse(indent);
@@ -472,6 +520,8 @@ class asgNode extends stmtNode {
 		source = e;
 	}
 
+	//Print like:
+	//##:	type id = expression;
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
 		genIndent(indent);
@@ -499,6 +549,12 @@ class ifThenNode extends stmtNode {
 	private final stmtNode elsePart;
 	private int endifLineNum;
 
+	//Print like:
+	//##:	if(expr)
+	//			stmt
+	//##:	else
+	//			stmt
+	//##:	endif
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
 		genIndent(indent);
@@ -521,15 +577,19 @@ class ifThenNode extends stmtNode {
 class whileNode extends stmtNode {
 	whileNode(exprNode i, exprNode e, stmtNode s, int line, int col) {
 		super(line, col);
-	 label = i;
-	 condition = e;
-	 loopBody = s;
+		label = i;
+		condition = e;
+		loopBody = s;
 	}
 
 	private final exprNode label;
 	private final exprNode condition;
 	private final stmtNode loopBody;
 
+
+	//Print like:
+	//##:	label:while(expression)
+	//			stmt
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
 		genIndent(indent);
@@ -558,6 +618,9 @@ class forNode extends stmtNode {
 	private final stmtNode update;
 	private final stmtNode loopBody;
 
+	//Print like:
+	//##:	for (type id = expression; expression; assignment)
+	//			stmt
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
 		genIndent(indent);
@@ -588,14 +651,17 @@ class readNode extends stmtNode {
 	private readNode moreReads;
 	
 	void Unparse(int indent) {
+		System.out.print(linenum + ":");
 		genIndent(indent);
 		Unparse(indent, true);
 	}
 	
+	//Print like:
+	//##:	READ (id1, id2, id3, ... , idN);
 	void Unparse(int indent, boolean rootCalled) {
 		if(rootCalled)
 		{
-			System.out.print("READ ");
+			System.out.print("READ (");
 		}
 		
 		targetVar.Unparse(0);
@@ -631,10 +697,14 @@ class printNode extends stmtNode {
 	private printNode morePrints;
 	
 	void Unparse(int indent) {
+		
+		System.out.print(linenum + ":");
 		genIndent(indent);
 		Unparse(indent, true);
 	}
 	
+	//Print like:
+	//##:	PRINT (thisID, nextID, nextID, ... , lastID);
 	void Unparse(int indent, boolean rootCalled) {
 		if(rootCalled)
 		{
@@ -671,8 +741,10 @@ class callNode extends stmtNode {
 	private final identNode methodName;
 	private final argsNode args;
 	
+	//Print like:
+	//##:	id(args);
 	void Unparse(int indent) {
-		
+		System.out.print(linenum + ":");
 		genIndent(indent);
 		methodName.Unparse(0);
 		System.out.print(" (");
@@ -691,8 +763,10 @@ class returnNode extends stmtNode {
 
 	private final exprNode returnVal;
 	
+	//Print like:
+	//##:	return expression;
 	void Unparse(int indent) {
-		
+		System.out.print(linenum + ":");
 		genIndent(indent);
 		System.out.print("return ");
 
@@ -736,9 +810,11 @@ class breakNode extends stmtNode {
 	}
 
 	private final identNode label;
-	
+
+	//Print like:
+	//##:	break label;
 	void Unparse(int indent) {
-		
+		System.out.print(linenum + ":");
 		genIndent(indent);
 		System.out.print("break ");
 
@@ -755,9 +831,11 @@ class continueNode extends stmtNode {
 	}
 
 	private final identNode label;
-	
+
+	//Print like:
+	//##:	continue label;
 	void Unparse(int indent) {
-		
+		System.out.print(linenum + ":");
 		genIndent(indent);
 		System.out.print("continue ");
 
@@ -778,7 +856,9 @@ class argsNode extends ASTNode {
 	static nullArgsNode NULL = new nullArgsNode();
 	private exprNode argVal;
 	private argsNode moreArgs;
-	
+
+	//Print like:
+	//		thisExpression, nextExpression, ... , lastExpression
 	void Unparse(int indent) {
 		argVal.Unparse(0);
 		if(!(moreArgs instanceof nullArgsNode))
