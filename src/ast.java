@@ -979,7 +979,7 @@ class intLitNode extends exprNode {
 		intval = val;
 	}
 	void Unparse(int indent) {
-		System.out.println(intval);
+		System.out.print(intval);
 	}
 	private final int intval;
 } // class intLitNode
@@ -990,7 +990,7 @@ class floatLitNode extends exprNode {
 		floatval = val;
 	}
 	void Unparse(int indent) {
-		System.out.println(floatval);
+		System.out.print(floatval);
 	}
 	private final float floatval;
 } // class floatLitNode
@@ -1001,7 +1001,8 @@ class charLitNode extends exprNode {
 		charval = val;
 	}
 	void Unparse(int indent) {
-		System.out.println(charval);
+		String tmp = escapeCharacters(charval);
+		System.out.print(tmp);
 	}
 	private final char charval;
 } // class charLitNode 
