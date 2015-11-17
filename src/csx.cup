@@ -64,11 +64,11 @@ prog			::= rw_CLASS:c ident:id LBRACE memberdecls:m RBRACE:rb
 			;
 		
 memberdecls		::= fielddecl:f memberdecls:memDecls
-				{:
+				{: 
 					fieldDeclsNode newFields = 
-					new fieldDeclsNode(f, memDecls.fields, f.linenum, f.colnum);
+						new fieldDeclsNode(f, memDecls.fields, f.linenum, f.colnum);
 					RESULT = new memberDeclsNode(newFields, memDecls.methods, 
-					memDecls.linenum, memDecls.colnum);
+						memDecls.linenum, memDecls.colnum);
 				:}
 				
 				| methoddecls:methDecls
@@ -269,21 +269,21 @@ type			::= rw_INT:l
 				:}
 				| rw_BOOL:l
 				{:
-					RESULT = new boolTypeNode( l.linenum, l.colnum);
+					RESULT = new boolTypeNode(l.linenum, l.colnum);
 				:}
 				| rw_FLOAT:l
 				{:
-					RESULT = new floatTypeNode( l.linenum, l.colnum);
+					RESULT = new floatTypeNode(l.linenum, l.colnum);
 				:}
 			;
 			
 args			::= expr:e COMMA args:a
 				{:
-					RESULT = new argsNode( e, a, e.linenum, e.colnum);
+					RESULT = new argsNode(e, a, e.linenum, e.colnum);
 				:}
 				| expr:e
 				{:
-					RESULT = new argsNode( e, argsNode.NULL, e.linenum, e.colnum);
+					RESULT = new argsNode(e, argsNode.NULL, e.linenum, e.colnum);
 				:}
 			;
 				
@@ -293,17 +293,17 @@ readlist		::= name:n COMMA readlist:r
 				:}
 				| name:n
 				{:
-					RESULT = new readNode(n, readNode.NULL , n.linenum, n.colnum);
+					RESULT = new readNode(n, readNode.NULL, n.linenum, n.colnum);
 				:}
 			;
 			
 printlist		::= expr:e COMMA printlist:p
 				{:
-					RESULT = new printNode( e, p, e.linenum, e.colnum);
+					RESULT = new printNode(e, p, e.linenum, e.colnum);
 				:}
 				| expr:e
 				{:
-					RESULT = new printNode( e, printNode.NULL , e.linenum, e.colnum);
+					RESULT = new printNode(e, printNode.NULL, e.linenum, e.colnum);
 				:}
 			;
 			
@@ -317,7 +317,7 @@ expr			::= expr:l COR term:r
 				:}
 				| term:l /* */ 
 				{:
-					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+					RESULT = new unaryOpNode(44, l, l.linenum, l.colnum);
 				:}
 			;
 			
@@ -347,7 +347,7 @@ term			::= factor:l LT factor:r
 				:}				
 				| factor:l
 				{:
-					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+					RESULT = new unaryOpNode(44, l, l.linenum, l.colnum);
 				:}
 			;
 			
@@ -361,7 +361,7 @@ factor			::= factor:l PLUS pri:r
 				:}
 				| pri:l
 				{:
-					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+					RESULT = new unaryOpNode(44, l, l.linenum, l.colnum);
 				:}
 			;
 
@@ -375,73 +375,73 @@ pri				::= pri:l TIMES unary:r
 				:}
 				| unary:l
 				{:
-					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+					RESULT = new unaryOpNode(44, l,  l.linenum, l.colnum);
 				:}
 			;
 			
 unary			::= NOT:opp unary:u
 				{:
-					RESULT = new unaryOpNode( 15, u, u.linenum, u.colnum);
+					RESULT = new unaryOpNode(15, u, u.linenum, u.colnum);
 				:}
 				| LPAREN:l type:t RPAREN unary:u
 				{:
-					RESULT = new castNode(t, u ,l.linenum, l.colnum);
+					RESULT = new castNode(t, u, l.linenum, l.colnum);
 				:}
 				| unit:l
 				{:
-					RESULT = new unaryOpNode( 44, l,  l.linenum, l.colnum);
+					RESULT = new unaryOpNode(44, l, l.linenum, l.colnum);
 				:}
 			;
 			
 unit			::= name:id
 				{:
-					RESULT = new nameNode(id.varName, exprNode.NULL, id.linenum,id.colnum);
+					RESULT = new nameNode(id.varName, exprNode.NULL, id.linenum, id.colnum);
 				:}	
 				| ident:id LPAREN RPAREN
 				{:
-					RESULT = new fctCallNode(id, argsNode.NULL , id.linenum, id.colnum);
+					RESULT = new fctCallNode(id, argsNode.NULL, id.linenum, id.colnum);
 				:}		
 				| ident:id LPAREN args:ar RPAREN
 				{:						
-					RESULT = new fctCallNode(id, ar , id.linenum, id.colnum);
+					RESULT = new fctCallNode(id, ar, id.linenum, id.colnum);
 				:}	
 				| INTLIT:i
 				{:
 					CSXIntLitToken il = (CSXIntLitToken)i;	
 					RESULT = new intLitNode(il.intValue,
-					il.linenum, il.colnum);
+						il.linenum, il.colnum);
 				:}
 				| CHARLIT:i
 				{: 
 					CSXCharLitToken cl = (CSXCharLitToken)i;	
 					RESULT = new charLitNode(cl.charValue,
-					cl.linenum, cl.colnum);
+						cl.linenum, cl.colnum);
 				:}
 				| FLOATLIT:i
 				{:
 					CSXFloatLitToken fl = (CSXFloatLitToken)i;	
 					RESULT = new floatLitNode(fl.floatValue,
-					fl.linenum, fl.colnum);
+						fl.linenum, fl.colnum);
 				:}
 				| STRLIT:i
 				{:
 					CSXStringLitToken sl = (CSXStringLitToken)i;					
 					RESULT = new strLitNode(sl.stringValue,
-					sl.linenum, sl.colnum);
+						sl.linenum, sl.colnum);
 				:}
 				| rw_TRUE:t
 				{:
 					RESULT = new trueNode(
-					t.linenum, t.colnum);
+						t.linenum, t.colnum);
 				:}
 				| rw_FALSE:f
 				{:
 					RESULT = new falseNode(
-					f.linenum, f.colnum);
+						f.linenum, f.colnum);
 				:}
 				| LPAREN:l expr:e RPAREN
 				{:
-					RESULT = new unaryOpNode( 44, e,  l.linenum, l.colnum);
+					RESULT = new unaryOpNode(44, e, l.linenum, l.colnum);
 				:}
 			;
 			
