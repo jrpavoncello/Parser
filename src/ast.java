@@ -504,8 +504,12 @@ class stmtsNode extends ASTNode {
 	//	...
 	//	lastStmt
 	void Unparse(int indent) {
-		System.out.print(thisStmt.linenum + ":");
-		genIndent(indent);
+		if(!(thisStmt instanceof blockNode))
+		{
+			System.out.print(thisStmt.linenum + ":");
+			genIndent(indent);
+		}
+		
 		thisStmt.Unparse(indent);
 		
 		if(!(thisStmt instanceof ifThenNode))
