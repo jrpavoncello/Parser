@@ -418,6 +418,8 @@ class argDeclsNode extends ASTNode {
 	//	thisArgDecl, nextArgDecl, nextArgDecl, ... , lastArgDecl
 	void Unparse(int indent) {
 		thisDecl.Unparse(0);
+		
+		//Make sure we're not at the end of the decls list
 		if(!(moreDecls instanceof nullArgDeclsNode))
 		{
 			System.out.print(", ");
@@ -504,6 +506,8 @@ class stmtsNode extends ASTNode {
 	//	...
 	//	lastStmt
 	void Unparse(int indent) {
+		//Don't print the line number or indent on a block node since the first thing it does
+		//is print the linenum, indent, and LBRACE
 		if(!(thisStmt instanceof blockNode))
 		{
 			System.out.print(thisStmt.linenum + ":");
@@ -511,7 +515,9 @@ class stmtsNode extends ASTNode {
 		}
 		
 		thisStmt.Unparse(indent);
-		
+
+		//If the thenPart is an ifThenNode, we don't want a semicolon to be printed 
+		//or else we will have "endif;"
 		if(!(thisStmt instanceof ifThenNode))
 		{
 			System.out.print(";");
@@ -577,6 +583,8 @@ class ifThenNode extends stmtNode {
 		condition.Unparse(0);
 		System.out.println(")");
 
+		//Don't print the line number or indent on a block node since the first thing it does
+		//is print the linenum, indent, and LBRACE
 		if(!(thenPart instanceof blockNode))
 		{
 			System.out.print(thenPart.linenum + ":");
@@ -584,7 +592,9 @@ class ifThenNode extends stmtNode {
 		}
 
 		thenPart.Unparse(indent + 1);
-		
+
+		//If the thenPart is an ifThenNode, we don't want a semicolon to be printed 
+		//or else we will have "endif;"
 		if(!(thenPart instanceof ifThenNode))
 		{
 			System.out.print(";");
@@ -592,12 +602,15 @@ class ifThenNode extends stmtNode {
 		
 		System.out.println();
 		
+		//Make sure we actually have an else part before printing
 		if(!(elsePart instanceof nullStmtNode))
 		{
 			System.out.print(linenum + ":");
 			genIndent(indent);
 			System.out.println("else");
-			
+
+			//Don't print the line number or indent on a block node since the first thing it does
+			//is print the linenum, indent, and LBRACE
 			if(!(elsePart instanceof blockNode))
 			{
 				System.out.print(elsePart.linenum + ":");
@@ -605,7 +618,9 @@ class ifThenNode extends stmtNode {
 			}
 			
 			elsePart.Unparse(indent + 1);
-			
+
+			//If the thenPart is an ifThenNode, we don't want a semicolon to be printed 
+			//or else we will have "endif;"
 			if(!(elsePart instanceof ifThenNode))
 			{
 				System.out.print(";");
@@ -641,7 +656,9 @@ class whileNode extends stmtNode {
 		System.out.print(" : while (");
 		condition.Unparse(0);
 		System.out.println(")");
-		
+
+		//Don't print the line number or indent on a block node since the first thing it does
+		//is print the linenum, indent, and LBRACE
 		if(!(loopBody instanceof blockNode))
 		{
 			System.out.print(loopBody.linenum + ":");
@@ -909,6 +926,8 @@ class argsNode extends ASTNode {
 	//		thisExpression, nextExpression, ... , lastExpression
 	void Unparse(int indent) {
 		argVal.Unparse(0);
+		
+		//Make sure we're not at the end of the args list
 		if(!(moreArgs instanceof nullArgsNode))
 		{
 			System.out.print(", ");
