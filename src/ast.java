@@ -188,6 +188,7 @@ class varDeclNode extends declNode {
 		System.out.print(linenum + ": ");
 		genIndent(indent);
 		varType.Unparse(0);
+		System.out.print(" ");
 		varName.Unparse(0);
 		System.out.print(" = ");
 		initValue.Unparse(0);
@@ -421,6 +422,8 @@ class argDeclsNode extends ASTNode {
 		{
 			System.out.print(", ");
 		}
+		
+		moreDecls.Unparse(0);
 	}
 } // class argDeclsNode 
 
@@ -889,6 +892,8 @@ class argsNode extends ASTNode {
 		{
 			System.out.print(", ");
 		}
+		
+		moreArgs.Unparse(0);
 	}
 } // class argsNode 
 
