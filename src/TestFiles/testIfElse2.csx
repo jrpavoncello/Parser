@@ -11,10 +11,8 @@ void main() {
 		 endif
 	endif
 
-
   // TEST5: same structure as TEST2, but different indenting to
   // confuse the human reader.
-
      if (x)
           if (y)
               i=6;endif
@@ -30,7 +28,6 @@ void main() {
 	endif
 	endif
   // TEST6: IF statements within WHILE loops
-
     while (a)
         if (x)
             while (b)
