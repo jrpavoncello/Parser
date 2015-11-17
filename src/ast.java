@@ -572,10 +572,20 @@ class ifThenNode extends stmtNode {
 		System.out.print("if (");
 		condition.Unparse(0);
 		System.out.println(")");
-		System.out.print(thenPart.linenum + ":");
-		genIndent(indent + 1);
-		thenPart.Unparse(indent + 1);
-		System.out.println(";");
+
+		if(!(thenPart instanceof blockNode))
+		{
+			System.out.print(thenPart.linenum + ":");
+			genIndent(indent + 1);
+			thenPart.Unparse(indent + 1);
+		}
+		
+		if(!(thenPart instanceof ifThenNode))
+		{
+			System.out.print(";");
+		}
+		
+		System.out.println();
 
 		System.out.print(linenum + ":");
 		genIndent(indent);
@@ -586,10 +596,17 @@ class ifThenNode extends stmtNode {
 			if(!(elsePart instanceof blockNode))
 			{
 				System.out.print(elsePart.linenum + ":");
+				genIndent(indent + 1);
 			}
 			
 			elsePart.Unparse(indent + 1);
-			System.out.println(";");
+			
+			if(!(elsePart instanceof ifThenNode))
+			{
+				System.out.print(";");
+			}
+			
+			System.out.println();
 		}
 		
 		System.out.print(endifLineNum + ": ");
@@ -618,7 +635,7 @@ class whileNode extends stmtNode {
 		label.Unparse(0);
 		System.out.print(" : while (");
 		condition.Unparse(0);
-		System.out.print(")");
+		System.out.println(")");
 		loopBody.Unparse(indent + 1);
 	}
 } // class whileNode 
