@@ -122,8 +122,8 @@ class memberDeclsNode extends ASTNode {
 	//	fields.Unparse
 	//	methods.Unparse
 	void Unparse(int indent) {
-		fields.Unparse(indent + 1);
-		methods.Unparse(indent + 1);
+		fields.Unparse(indent);
+		methods.Unparse(indent);
 	}
 } // class memberDeclsNode
 
