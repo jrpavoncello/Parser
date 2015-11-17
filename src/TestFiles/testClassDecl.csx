@@ -4,6 +4,6 @@ class test {
   float n [3];
   bool s [1];  
  
-  void foo();
+ 
 
 }
