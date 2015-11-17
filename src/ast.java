@@ -505,6 +505,7 @@ class stmtsNode extends ASTNode {
 	//	lastStmt
 	void Unparse(int indent) {
 		thisStmt.Unparse(indent);
+		System.out.println(";");
 		moreStmts.Unparse(indent);
 	} 
 
@@ -535,7 +536,6 @@ class asgNode extends stmtNode {
 		target.Unparse(0);
 		System.out.print(" = ");
 		source.Unparse(0);
-		System.out.println(";");
 	}
 
 	private final nameNode target;
@@ -577,7 +577,7 @@ class ifThenNode extends stmtNode {
 		
 		System.out.print(endifLineNum + ": ");
 		genIndent(indent);
-		System.out.println("endif");
+		System.out.print("endif");
 	}
 } // class ifThenNode 
 
@@ -603,7 +603,7 @@ class whileNode extends stmtNode {
 		label.Unparse(0);
 		System.out.print(" : while (");
 		condition.Unparse(0);
-		System.out.println(")");
+		System.out.print(")");
 		loopBody.Unparse(indent + 1);
 	}
 } // class whileNode 
@@ -680,7 +680,7 @@ class readNode extends stmtNode {
 		if(moreReads instanceof nullReadNode)
 		{
 			//If so, print the closing ");"
-			System.out.println(");");
+			System.out.print(")");
 		}
 		else
 		{
@@ -736,7 +736,7 @@ class printNode extends stmtNode {
 		if(morePrints instanceof nullPrintNode)
 		{
 			//If so, print the closing ");"
-			System.out.println(");");
+			System.out.print(")");
 		}
 		else
 		{
@@ -773,7 +773,7 @@ class callNode extends stmtNode {
 
 		args.Unparse(0);
 		
-		System.out.println(");");
+		System.out.print(")");
 	}
 } // class callNode 
 
@@ -793,8 +793,6 @@ class returnNode extends stmtNode {
 		System.out.print("return ");
 
 		returnVal.Unparse(0);
-		
-		System.out.println(";");
 	}
 } // class returnNode 
 
@@ -825,7 +823,7 @@ class blockNode extends stmtNode {
 		
 		System.out.print(closingLineNum + ":");
 		genIndent(indent);
-		System.out.println("}");
+		System.out.print("}");
 			
 	}
 } // class blockNode 
@@ -846,8 +844,6 @@ class breakNode extends stmtNode {
 		System.out.print("break ");
 
 		label.Unparse(0);
-		
-		System.out.println(";");
 	}
 } // class breakNode 
 
@@ -867,8 +863,6 @@ class continueNode extends stmtNode {
 		System.out.print("continue ");
 
 		label.Unparse(0);
-		
-		System.out.println(";");
 	}
 } // class continueNode 
 
@@ -1022,15 +1016,12 @@ class castNode extends exprNode {
 		resultType = t;
 	}
 	
-	
-	
 	void Unparse(int indent) {
 		System.out.println("(");
 		resultType.Unparse(0);
 		System.out.println(")");
 
 		operand.Unparse(0);
-		
 	}
 	private final exprNode operand;
 	private final typeNode resultType;
@@ -1047,8 +1038,7 @@ class fctCallNode extends exprNode {
 		methodName.Unparse(indent);
 		System.out.print('(');
 		methodArgs.Unparse(0);
-		System.out.print(");");
-		//argsNode.Unparse(indent);
+		System.out.print(")");
 	}
 	private final identNode methodName;
 	private final argsNode methodArgs;
