@@ -369,6 +369,7 @@ class methodDeclNode extends ASTNode {
 
 	//Print like:
 	//	type id(args){
+	//		fieldDeclarations
 	//		statements
 	//	}
 	void Unparse(int indent) {
@@ -380,6 +381,7 @@ class methodDeclNode extends ASTNode {
 		System.out.print("(");
 		args.Unparse(0);
 		System.out.println("){");
+		decls.Unparse(indent + 1);
 		stmts.Unparse(indent + 1);
 		System.out.print(closingLineNum + ": ");
 		genIndent(indent);
@@ -411,7 +413,7 @@ class argDeclsNode extends ASTNode {
 	private argDeclsNode moreDecls;
 
 	//Print like:
-	//	thisArg, nextArg, nextArg, ... , lastArg
+	//	thisArgDecl, nextArgDecl, nextArgDecl, ... , lastArgDecl
 	void Unparse(int indent) {
 		thisDecl.Unparse(0);
 		if(!(moreDecls instanceof nullArgDeclsNode))
@@ -659,19 +661,25 @@ class readNode extends stmtNode {
 	//Print like:
 	//##:	READ (id1, id2, id3, ... , idN);
 	void Unparse(int indent, boolean rootCalled) {
+		//If it's the first node in the list, print the "READ (" part
 		if(rootCalled)
 		{
 			System.out.print("READ (");
 		}
-		
+
+		//Print the current node's expression
 		targetVar.Unparse(0);
-		
+
+		//If this is the last node, the next readNode will be
+		//an instance of nullReadNode
 		if(moreReads instanceof nullReadNode)
 		{
+			//If so, print the closing ");"
 			System.out.println(");");
 		}
 		else
 		{
+			//If not, print a separator comma
 			System.out.print(", ");
 			moreReads.Unparse(0, false);
 		}
@@ -696,6 +704,9 @@ class printNode extends stmtNode {
 	private exprNode outputValue;
 	private printNode morePrints;
 	
+	//Use a helper method to unparse the print statement because
+	//the parser buids a linked list and we need to extra formatting
+	//for the first, last and in between nodes
 	void Unparse(int indent) {
 		
 		System.out.print(linenum + ":");
@@ -704,21 +715,27 @@ class printNode extends stmtNode {
 	}
 	
 	//Print like:
-	//##:	PRINT (thisID, nextID, nextID, ... , lastID);
+	//		PRINT (thisExpr, nextExpr, nextExpr, ... , lastExpr);
 	void Unparse(int indent, boolean rootCalled) {
+		//If it's the first node in the list, print the "PRINT (" part
 		if(rootCalled)
 		{
 			System.out.print("PRINT (");
 		}
 
+		//Print the current node's expression
 		outputValue.Unparse(0);
 		
+		//If this is the last node, the next printNode will be
+		//an instance of nullPrintNode
 		if(morePrints instanceof nullPrintNode)
 		{
+			//If so, print the closing ");"
 			System.out.println(");");
 		}
 		else
 		{
+			//If not, print a separator comma
 			System.out.print(", ");
 			morePrints.Unparse(0, false);
 		}
@@ -788,6 +805,11 @@ class blockNode extends stmtNode {
 	private final stmtsNode stmts;
 	private int closingLineNum;
 	
+	//Print like:
+	//##:	{
+	//			fieldDeclarations
+	//			statements
+	//##:	}
 	void Unparse(int indent) {
 		System.out.print(linenum + ":");
 		genIndent(indent);
